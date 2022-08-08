@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
+import { collection, addDoc } from "firebase/firestore"; 
+import {db} from '../Firebase/firebase';
 
 //global styles
 import globalStyles from "../Globals/globalStyles";
@@ -23,6 +25,38 @@ export default function () {
   const onCatersClick = () => {
     setCustomerClick(false);
     setCatererClick(true);
+  };
+
+  const addClientData=async()=>{
+    try {
+      const docRef = await addDoc(collection(db, "clients"), {
+        firstName:firstName,
+        lastName:lastName,
+        phoneNumber:phoneNumber,
+        password:password,
+        userName:userName
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+  
+  const addCaterdata=async()=>{
+    try {
+      const docRef = await addDoc(collection(db, "caterers"), {
+        firstName:firstName,
+        lastName:lastName,
+        phoneNumber:phoneNumber,
+        password:password,
+        userName:userName,
+        cateringServiceName:cateringServiceName,
+        address:address
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
@@ -61,7 +95,7 @@ export default function () {
                 <Text style={styles.inputTextContent}>Password</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} />
               </View>
-              <Pressable style={[styles.btnFacebook, styles.btnSubmit]}>
+              <Pressable style={[styles.btnFacebook, styles.btnSubmit]} onPress={addClientData}>
                 <Text style={styles.textBtn}>Submit</Text>
               </Pressable>
               <View style={styles.item}>
@@ -104,7 +138,7 @@ export default function () {
                 <Text style={styles.inputTextContent}>Password</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} />
               </View>
-              <Pressable style={[styles.btnFacebook, styles.btnSubmit]}>
+              <Pressable style={[styles.btnFacebook, styles.btnSubmit]} onPress={addCaterdata}>
                 <Text style={styles.textBtn}>Submit</Text>
               </Pressable>
             </View>
