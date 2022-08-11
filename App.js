@@ -15,6 +15,7 @@ import Header from "./Components/Header";
 //global style components
 import globalStyles from "./Globals/globalStyles";
 import Tabs from "./Components/Tabs";
+import CustomNavigation from "./Components/CustomNavigation";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -37,13 +38,7 @@ export default function App() {
             <stack.Screen name="start" component={StartPage} options={{ headerShown: false }} />
             <stack.Screen name="signup" component={SignUpPage} options={{ title: "Create Account" }} />
             <stack.Screen name="login" component={LoginPage} options={{ title: "Login" }} />
-            <stack.Screen
-              name="home"
-              component={Home}
-              options={{
-                header: () => <Header />,
-              }}
-            />
+            <stack.Screen name="home" component={CustomNavigation} options={{ headerShown: false }} />
           </stack.Navigator>
         </NavigationContainer>
       </View>
