@@ -11,10 +11,12 @@ const LoginPage = ({ navigation }) => {
 
   const checkLogin = async () => {
     try {
+      var t=false;
       const querySnapshot1 = await getDocs(collection(db, "clients"));
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
           console.log("Client a" + doc.data().userName + " " + doc.data().password);
+          t=true;
           navigation.navigate("home");
         }
       });
@@ -22,12 +24,27 @@ const LoginPage = ({ navigation }) => {
       querySnapshot2.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
           console.log("Caterer" + doc.data().userName + " " + doc.data().password);
+          t=true;
+          
         }
       });
+      if(t){
+        btnReset();
+        setPasswordIncorrect(false);
+        navigation.navigate("home");
+      }
+      else{
+        setPasswordIncorrect(true);
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
+
+  const btnReset= () =>{
+    setUserName('');
+    setPassword('');
+  }
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -38,25 +55,26 @@ const LoginPage = ({ navigation }) => {
         <View style={styles.inputItemsContainer}>
           <View style={styles.inputItem}>
             <Text style={styles.inputTextContent}>User Name</Text>
-            <TextInput style={styles.input} onChangeText={(val) => setUserName(val)} />
+            <TextInput style={styles.input} onChangeText={(val) => setUserName(val)} value={userName}/>
           </View>
           <View style={styles.inputItem}>
             <Text style={styles.inputTextContent}>Password</Text>
-            <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} />
+            <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password}/>
           </View>
         </View>
-        {passwordIncorrect ? (
+        {!passwordIncorrect ? (
+          <View></View>
+        ) : (
           <View style={styles.errorContainer}>
             <Text style={styles.errorContent}>Username or Password Incorrect</Text>
           </View>
-        ) : (
-          <View></View>
+          
         )}
         <View style={styles.btnContainer}>
           <Pressable style={[styles.btn, styles.btnSubmit]} onPress={checkLogin}>
             <Text style={styles.btnContent}>Submit</Text>
           </Pressable>
-          <Pressable style={[styles.btn, styles.btnReset]}>
+          <Pressable style={[styles.btn, styles.btnReset]} onPress={btnReset}>
             <Text style={styles.btnContent}>Reset</Text>
           </Pressable>
         </View>
