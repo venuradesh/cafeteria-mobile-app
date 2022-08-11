@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
-import { collection, addDoc } from "firebase/firestore"; 
-import {db} from '../Firebase/firebase';
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 //global styles
 import globalStyles from "../Globals/globalStyles";
@@ -16,6 +16,7 @@ export default function () {
   const [address, setAddress] = useState("");
   const [customerClick, setCustomerClick] = useState(true);
   const [catererClick, setCatererClick] = useState(false);
+  const [userNametaken, setUserNametaken] = useState(false);
 
   const onCustomerClick = () => {
     setCatererClick(false);
@@ -27,31 +28,31 @@ export default function () {
     setCatererClick(true);
   };
 
-  const addClientData=async()=>{
+  const addClientData = async () => {
     try {
       const docRef = await addDoc(collection(db, "clients"), {
-        firstName:firstName,
-        lastName:lastName,
-        phoneNumber:phoneNumber,
-        password:password,
-        userName:userName
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        password: password,
+        userName: userName,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
-  
-  const addCaterdata=async()=>{
+
+  const addCaterdata = async () => {
     try {
       const docRef = await addDoc(collection(db, "caterers"), {
-        firstName:firstName,
-        lastName:lastName,
-        phoneNumber:phoneNumber,
-        password:password,
-        userName:userName,
-        cateringServiceName:cateringServiceName,
-        address:address
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        password: password,
+        userName: userName,
+        cateringServiceName: cateringServiceName,
+        address: address,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -79,6 +80,13 @@ export default function () {
                 <Text style={styles.inputTextContent}>User Name</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setUserName(val)} />
               </View>
+              {userNametaken ? (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorContent}>Username already taken</Text>
+                </View>
+              ) : (
+                <View></View>
+              )}
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>First Name</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} />
@@ -162,7 +170,7 @@ const styles = StyleSheet.create({
 
   btn: {
     paddingVertical: 20,
-    backgroundColor: "#999999",
+    backgroundColor: "#BFBFBF",
     alignItems: "center",
     borderRadius: 12,
     paddingHorizontal: 30,
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
   },
 
   inputTextContent: {
-    color: "#999999",
+    color: "#BFBFBF",
     marginLeft: 10,
   },
 
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
   },
 
   orelse: {
-    color: "#999999",
+    color: "#BFBFBF",
     textAlign: "center",
     fontSize: 24,
   },
@@ -223,5 +231,17 @@ const styles = StyleSheet.create({
 
   btnGoogle: {
     backgroundColor: "#D93D4A",
+  },
+
+  errorContainer: {
+    height: 40,
+    marginBottom: -20,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+
+  errorContent: {
+    color: "#F23D3D",
+    fontSize: 14,
   },
 });
