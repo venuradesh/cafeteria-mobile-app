@@ -9,9 +9,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import StartPage from "./Screens/StartPage";
 import SignUpPage from "./Screens/SignUpPage";
 import LoginPage from "./Screens/LoginPage";
+import Home from "./Screens/Home";
+import Header from "./Components/Header";
 
 //global style components
 import globalStyles from "./Globals/globalStyles";
+import Tabs from "./Components/Tabs";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -34,6 +37,13 @@ export default function App() {
             <stack.Screen name="start" component={StartPage} options={{ headerShown: false }} />
             <stack.Screen name="signup" component={SignUpPage} options={{ title: "Create Account" }} />
             <stack.Screen name="login" component={LoginPage} options={{ title: "Login" }} />
+            <stack.Screen
+              name="home"
+              component={Home}
+              options={{
+                header: () => <Header />,
+              }}
+            />
           </stack.Navigator>
         </NavigationContainer>
       </View>
