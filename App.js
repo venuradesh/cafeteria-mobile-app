@@ -17,6 +17,7 @@ import globalStyles from "./Globals/globalStyles";
 import Tabs from "./Components/Tabs";
 import CustomNavigation from "./Components/CustomNavigation";
 import AdminBottomBarNav from "./Components/AdminBottomBarNav";
+import FoodCategoryList from "./Screens/FoodCategoryList";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -41,6 +42,16 @@ export default function App() {
             <stack.Screen name="login" component={LoginPage} options={{ title: "Login" }} />
             <stack.Screen name="home" component={CustomNavigation} options={{ headerShown: false }} />
             <stack.Screen name="adminHome" component={AdminBottomBarNav} options={{ headerShown: false }} />
+            <stack.Screen
+              name="foodCategory"
+              component={FoodCategoryList}
+              options={{
+                title: "Food Category",
+                headerStyle: {
+                  backgroundColor: "coral",
+                },
+              }}
+            />
           </stack.Navigator>
         </NavigationContainer>
       </View>
