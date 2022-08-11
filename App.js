@@ -16,6 +16,7 @@ import Header from "./Components/Header";
 import globalStyles from "./Globals/globalStyles";
 import Tabs from "./Components/Tabs";
 import CustomNavigation from "./Components/CustomNavigation";
+import AdminBottomBarNav from "./Components/AdminBottomBarNav";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -39,6 +40,7 @@ export default function App() {
             <stack.Screen name="signup" component={SignUpPage} options={{ title: "Create Account" }} />
             <stack.Screen name="login" component={LoginPage} options={{ title: "Login" }} />
             <stack.Screen name="home" component={CustomNavigation} options={{ headerShown: false }} />
+            <stack.Screen name="adminHome" component={AdminBottomBarNav} options={{ headerShown: false }} />
           </stack.Navigator>
         </NavigationContainer>
       </View>

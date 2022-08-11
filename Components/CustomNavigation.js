@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+//dependencies
+import { StyleSheet } from "react-native";
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { MaterialIcons } from "@expo/vector-icons";
+
+//components
 import Home from "../Screens/Home";
 import Search from "../Screens/Search";
 import MyOrders from "../Screens/MyOrders";
 import ProfileClient from "../Screens/ProfileClient";
 import Header from "./Header";
-import { MaterialIcons } from "@expo/vector-icons";
 
 const Tabs = createBottomTabNavigator();
 
@@ -36,9 +38,9 @@ const CustomNavigation = () => {
       })}
     >
       <Tabs.Screen name="home" component={Home} options={{ header: () => <Header /> }} />
-      <Tabs.Screen name="search" component={Search} />
-      <Tabs.Screen name="MyOrders" component={MyOrders} />
-      <Tabs.Screen name="profileClient" component={ProfileClient} />
+      <Tabs.Screen name="search" component={Search} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="MyOrders" component={MyOrders} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="profileClient" component={ProfileClient} options={{ header: () => <Header /> }} />
     </Tabs.Navigator>
   );
 };
