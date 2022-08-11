@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
-import { collection, addDoc , getDocs, onSnapshot , query, where } from "firebase/firestore";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 
 //global styles
@@ -17,6 +17,7 @@ export default function () {
   const [customerClick, setCustomerClick] = useState(true);
   const [catererClick, setCatererClick] = useState(false);
   const [userNametaken, setUserNametaken] = useState(false);
+  const [userId, setUserId] = useState('');
 
   const onCustomerClick = () => {
     setCatererClick(false);
@@ -30,15 +31,15 @@ export default function () {
 
   const addClientData = async () => {
     try {
-      checkUserName();
       if(!userNametaken){
-        console.log('in');
+        const ref = doc(collection(db,"clients"));
         const docRef = await addDoc(collection(db, "clients"), {
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber,
           password: password,
           userName: userName,
+          userId:ref.id
         });
       
       console.log("Document written with ID: ", docRef.id);
@@ -51,7 +52,7 @@ export default function () {
 
   const addCaterdata = async () => {
     try {
-      console.log(userNametaken);
+      const ref = doc(collection(db,"caterers"));
       if(!userNametaken){
       const docRef = addDoc(collection(db, "caterers"), {
         firstName: firstName,
@@ -61,6 +62,7 @@ export default function () {
         userName: userName,
         cateringServiceName: cateringServiceName,
         address: address,
+        userId:ref.id
       });
       console.log("Document written with ID: ", docRef.id);
       //navigation.navigate("login");
@@ -73,6 +75,14 @@ export default function () {
     var t=false;
     const q = query(collection(db, "clients"),where('userName','==',userName));
     const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        t=true;
+        setUserNametaken(true);
+      });
+    });
+    console.log(userName);
+    const qq = query(collection(db, "caterers"),where('userName','==',userName));
+    const cater = onSnapshot(qq, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         t=true;
         setUserNametaken(true);
@@ -155,6 +165,13 @@ export default function () {
                 <Text style={styles.inputTextContent}>User Name</Text>
                 <TextInput style={styles.input} onChangeText={(val) => {setUserName(val)} } value={userName}/>
               </View>
+              {userNametaken ? (
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorContent}>Username already taken</Text>
+                </View>
+              ) : (
+                <View></View>
+              )}
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>First Name</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} value={firstName}/>

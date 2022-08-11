@@ -11,7 +11,11 @@ const Home = () => {
   const [deliveryClick, setDeliveryClick] = useState(true);
   const [pickupClick, setPickupClick] = useState(false);
   const categoryData = [
-    { title: "Fast Food", key: "1", activeStatus: "active", image: { uri: "https://i0.wp.com/post.healthline.com/wp-content/uploads/2021/07/Starbucks_Food_Spinach_Feta_Wrap-1296x728-header.jpg?w=1155&h=1528" } },
+    { 
+      title: "Fast Food", 
+      key: "1", 
+      activeStatus: "active", 
+      image: { uri: "https://i0.wp.com/post.healthline.com/wp-content/uploads/2021/07/Starbucks_Food_Spinach_Feta_Wrap-1296x728-header.jpg?w=1155&h=1528" } },
     {
       title: "Fried Rice",
       key: "2",

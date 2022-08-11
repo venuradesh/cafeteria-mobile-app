@@ -7,14 +7,19 @@ import { db } from "../Firebase/firebase";
 const LoginPage = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [userid, setUserId] = useState("");
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
 
   const checkLogin = async () => {
     try {
+      var t=false;
+      
       const querySnapshot1 = await getDocs(collection(db, "clients"));
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
-          console.log("Client a" + doc.data().userName + " " + doc.data().password);
+          t=true;
+          setUserId(doc.id);
+          console.log(doc.id);
           navigation.navigate("home");
         }
       });
@@ -23,6 +28,9 @@ const LoginPage = ({ navigation }) => {
         if (doc.data().userName == userName && doc.data().password == password) {
           console.log("Caterer" + doc.data().userName + " " + doc.data().password);
           navigation.navigate("adminHome");
+          setUserId(doc.id);
+          console.log(doc.id);
+          t=true;
         }
       });
     } catch (e) {
