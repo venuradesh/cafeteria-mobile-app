@@ -32,6 +32,23 @@ const Home = () => {
     },
   ];
 
+  const offerItems = [
+    {
+      title: "Main Canteen",
+      key: "1",
+      time: "5 min",
+      venue: "Main canteen Ground floor",
+      image: { uri: "https://cdn.shopify.com/s/files/1/1762/3971/files/masm.jpg?v=1654761479&width=1500" },
+    },
+    {
+      title: "Swarna Stores",
+      key: "2",
+      time: "10min",
+      venue: "outside",
+      image: { uri: "https://cdn.shopify.com/s/files/1/1762/3971/files/masm.jpg?v=1654761479&width=1500" },
+    },
+  ];
+
   const onDelivery = () => {
     setDeliveryClick(true);
     setPickupClick(false);
@@ -95,6 +112,31 @@ const Home = () => {
           <Text style={styles.minIndicator}>sec</Text>
         </View>
       </View>
+      <FlatList
+        data={offerItems}
+        horizontal={true}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.offersContainer}>
+              <View style={styles.offersImageContainer}>
+                <Image style={styles.offersImage} source={item.image} />
+              </View>
+              <View style={styles.offerTitleContainer}>
+                <Text style={styles.offerTitleContent}>{item.title}</Text>
+              </View>
+              <View style={styles.offerDetailsContainer}>
+                <View style={styles.offerTime}>
+                  <Text style={styles.offerTimeContent}>{item.time}</Text>
+                </View>
+                <View style={styles.offerLocation}>
+                  <MaterialIcons name="location-pin" size={24} color="#BFBFBF" />
+                  <Text style={styles.offerLocationContent}>{item.venue}</Text>
+                </View>
+              </View>
+            </View>
+          );
+        }}
+      />
     </ScrollView>
   );
 };
@@ -251,5 +293,63 @@ const styles = StyleSheet.create({
 
   minIndicator: {
     fontSize: 10,
+  },
+
+  offersContainer: {
+    width: 300,
+    marginHorizontal: 20,
+    height: 200,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#BFBFBF",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+
+  offersImageContainer: {
+    width: "100%",
+  },
+
+  offersImage: {
+    width: "100%",
+    height: 130,
+  },
+
+  offerTitleContainer: {
+    width: "100%",
+    height: 30,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+
+  offerTitleContent: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+
+  offerDetailsContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
+    marginTop: 5,
+  },
+
+  offerTime: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  offerTimeContent: {
+    color: "#BFBFBF",
+  },
+
+  offerLocation: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  offerLocationContent: {
+    color: "#BFBFBF",
+    marginLeft: 10,
   },
 });
