@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import { StyleSheet, Text, View, FlatList, Image, Pressable, SafeAreaView } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
@@ -6,15 +6,19 @@ import { MaterialIcons } from "@expo/vector-icons";
 import globalStyles from "../Globals/globalStyles";
 
 const FoodCategoryList = ({ route, navigation }) => {
+  const onItemClick = (itemDetails) => {
+    navigation.navigate("itemDes", { itemDetails });
+  };
+
   const dataList = [
-    { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" } },
-    { name: "Fast Food", key: "2", price: "Rs 150/-", venue: "Shiwa Canteen", image: { uri: "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg" } },
-    { name: "Mega rice", key: "3", price: "Rs 400/-", venue: "Main canteen", image: { uri: "https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg" } },
-    { name: "Chilli Rice", key: "4", price: "Rs 250/-", venue: "Shawarma", image: { uri: "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900" } },
+    { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" }, desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged." },
+    { name: "Fast Food", key: "2", price: "Rs 150/-", venue: "Shiwa Canteen", image: { uri: "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg" }, desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged." },
+    { name: "Mega rice", key: "3", price: "Rs 400/-", venue: "Main canteen", image: { uri: "https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg" }, desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged." },
+    { name: "Chilli Rice", key: "4", price: "Rs 250/-", venue: "Shawarma", image: { uri: "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900" }, desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged." },
   ];
 
   return (
-    <View style={[globalStyles.container, styles.container]}>
+    <SafeAreaView style={[globalStyles.container, styles.container]}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleContent}>{route.params.itemName}</Text>
       </View>
@@ -24,7 +28,7 @@ const FoodCategoryList = ({ route, navigation }) => {
           horizontal={false}
           renderItem={({ item }) => {
             return (
-              <View style={styles.offersContainer}>
+              <Pressable style={styles.offersContainer} onPress={() => onItemClick(item)}>
                 <View style={styles.offersImageContainer}>
                   <Image style={styles.offersImage} source={item.image} />
                 </View>
@@ -40,18 +44,23 @@ const FoodCategoryList = ({ route, navigation }) => {
                     <Text style={styles.offerLocationContent}>{item.venue}</Text>
                   </View>
                 </View>
-              </View>
+              </Pressable>
             );
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default FoodCategoryList;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: 70,
+  },
+
   titleContainer: {
     alignItems: "center",
     marginVertical: 20,
