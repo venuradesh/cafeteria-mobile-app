@@ -33,7 +33,7 @@ const AdminBottomBarNav = () => {
         tabBarInactiveTintColor: "#BFBFBF",
       })}
     >
-      <Tabs.Screen name="adminHome" options={{ header: () => <AdminHeader />, title: "Home" }} component={AdminHome} />
+      <Tabs.Screen name="adminHome" options={{ header: () => <AdminHeader />, title: "Caterer Home" }} component={AdminHome} />
       <Tabs.Screen name="addFood" options={{ header: () => <AdminHeader />, title: "Add Items" }} component={AddItems} />
       <Tabs.Screen name="myorders" options={{ header: () => <AdminHeader />, title: "Orders" }} component={AdminOrders} />
     </Tabs.Navigator>
