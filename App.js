@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 //components
@@ -18,6 +18,7 @@ import Tabs from "./Components/Tabs";
 import CustomNavigation from "./Components/CustomNavigation";
 import AdminBottomBarNav from "./Components/AdminBottomBarNav";
 import FoodCategoryList from "./Screens/FoodCategoryList";
+import ItemDes from "./Screens/ItemDes";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -52,6 +53,7 @@ export default function App() {
                 },
               }}
             />
+            <stack.Screen name="itemDes" component={ItemDes} options={{ title: "Item Description", headerStyle: { backgroundColor: "coral" } }} />
           </stack.Navigator>
         </NavigationContainer>
       </View>
