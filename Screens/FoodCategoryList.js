@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, FlatList, Image, SafeAreaView, Pressable } from "react-native";
 import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
-import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 
 //components
 import globalStyles from "../Globals/globalStyles";
 
 const FoodCategoryList = ({ route, navigation }) => {
-  const [arrayList,setArrayList]=useState([]);
+  const [arrayList, setArrayList] = useState([]);
   const dataList = [
     { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" } },
     { name: "Fast Food", key: "2", price: "Rs 150/-", venue: "Shiwa Canteen", image: { uri: "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg" } },
@@ -16,31 +16,28 @@ const FoodCategoryList = ({ route, navigation }) => {
     { name: "Chilli Rice", key: "4", price: "Rs 250/-", venue: "Shawarma", image: { uri: "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900" } },
   ];
 
-  useEffect(()=>{
-    var t=false;
-    var size=arrayList.length;
-    const q = query(collection(db, "foods"),where('foodType','==',route.params.itemName));
+  useEffect(() => {
+    var t = false;
+    var size = arrayList.length;
+    const q = query(collection(db, "foods"), where("foodType", "==", route.params.itemName));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        var t=true;
-        for(let i=0;i<size;i++){
-          if(arrayList[i].key == doc.data().key){
-            t=false;
+        var t = true;
+        for (let i = 0; i < size; i++) {
+          if (arrayList[i].key == doc.data().key) {
+            t = false;
             break;
           }
         }
-        if(t){
-          setArrayList(prev=>[...prev,doc.data()]);
+        if (t) {
+          setArrayList((prev) => [...prev, doc.data()]);
         }
-        
       });
     });
-    
-    
   }, []);
-  const onItemClick=(item)=>{
-    console.log(item.name);
-  }
+  const onItemClick = (itemDetails) => {
+    navigation.navigate("itemDes", { itemDetails });
+  };
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -55,7 +52,6 @@ const FoodCategoryList = ({ route, navigation }) => {
             return (
               <Pressable style={styles.offersContainer} onPress={() => onItemClick(item)}>
                 <View style={styles.offersImageContainer}>
-          
                   <Image style={styles.offersImage} source={item.image} />
                 </View>
                 <View style={styles.offerTitleContainer}>
