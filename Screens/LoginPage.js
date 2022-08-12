@@ -12,12 +12,12 @@ const LoginPage = ({ navigation }) => {
 
   const checkLogin = async () => {
     try {
-      var t=false;
-      
+      var t = false;
+
       const querySnapshot1 = await getDocs(collection(db, "clients"));
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
-          t=true;
+          t = true;
           setUserId(doc.id);
           console.log(doc.id);
           navigation.navigate("home");
@@ -30,7 +30,7 @@ const LoginPage = ({ navigation }) => {
           navigation.navigate("adminHome");
           setUserId(doc.id);
           console.log(doc.id);
-          t=true;
+          t = true;
         }
       });
     } catch (e) {
@@ -51,7 +51,7 @@ const LoginPage = ({ navigation }) => {
           </View>
           <View style={styles.inputItem}>
             <Text style={styles.inputTextContent}>Password</Text>
-            <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} />
+            <TextInput style={styles.input} secureTextEntry={true} onChangeText={(val) => setPassword(val)} />
           </View>
         </View>
         {passwordIncorrect ? (
@@ -67,6 +67,17 @@ const LoginPage = ({ navigation }) => {
           </Pressable>
           <Pressable style={[styles.btn, styles.btnReset]}>
             <Text style={styles.btnContent}>Reset</Text>
+          </Pressable>
+        </View>
+        <View>
+          <View style={styles.item}>
+            <Text style={styles.orelse}>Or</Text>
+          </View>
+          <Pressable style={[styles.btnFacebook]}>
+            <Text style={styles.textBtn}>Sign Up with Facebook</Text>
+          </Pressable>
+          <Pressable style={[styles.btnFacebook, styles.btnGoogle]}>
+            <Text style={styles.textBtn}>Sign Up with Google</Text>
           </Pressable>
         </View>
       </View>
