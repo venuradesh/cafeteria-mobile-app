@@ -271,9 +271,10 @@ const styles = StyleSheet.create({
   },
 
   itemText: {
+    width: "100%",
     marginTop: 10,
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
     color: "white",
   },

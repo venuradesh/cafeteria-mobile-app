@@ -21,7 +21,7 @@ const ItemDes = ({ route, navigation }) => {
         <Text style={styles.itemDes}>You can Buy this food at {route.params.itemDetails.venue}</Text>
       </View>
       <View style={styles.priceContainer}>
-        <Text style={styles.price}>{route.params.itemDetails.price}</Text>
+        <Text style={styles.price}>Rs.{route.params.itemDetails.price}/-</Text>
       </View>
       <View style={styles.btnContainer}>
         <Pressable style={styles.btn} onPress={() => setOrderClick(true)}>
