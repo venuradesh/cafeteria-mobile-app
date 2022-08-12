@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const AdminHeader = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
-      <MaterialIcons name="menu" size={32} color="white" />
+      <Pressable onPress={() => navigation.openDrawer()}>
+        <MaterialIcons name="menu" size={32} color="white" />
+      </Pressable>
       <Text style={styles.text}>Virtual Cafe</Text>
     </View>
   );

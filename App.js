@@ -1,24 +1,13 @@
+import "react-native-gesture-handler";
 import React, { useState } from "react";
 import { View } from "react-native";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
-import { NavigationContainer, StackActions } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-//components
-import StartPage from "./Screens/StartPage";
-import SignUpPage from "./Screens/SignUpPage";
-import LoginPage from "./Screens/LoginPage";
-import Home from "./Screens/Home";
-import Header from "./Components/Header";
+import { NavigationContainer } from "@react-navigation/native";
 
 //global style components
 import globalStyles from "./Globals/globalStyles";
-import Tabs from "./Components/Tabs";
-import CustomNavigation from "./Components/CustomNavigation";
-import AdminBottomBarNav from "./Components/AdminBottomBarNav";
-import FoodCategoryList from "./Screens/FoodCategoryList";
-import ItemDes from "./Screens/ItemDes";
+import AppStack from "./Components/AppStack";
 
 const getFont = () => {
   return Font.loadAsync({
@@ -28,8 +17,6 @@ const getFont = () => {
   });
 };
 
-const stack = createNativeStackNavigator();
-
 export default function App() {
   const [fonts, setFonts] = useState(false);
 
@@ -37,24 +24,7 @@ export default function App() {
     return (
       <View style={[globalStyles.container]}>
         <NavigationContainer style={[globalStyles.container]}>
-          <stack.Navigator>
-            <stack.Screen name="start" component={StartPage} options={{ headerShown: false }} />
-            <stack.Screen name="signup" component={SignUpPage} options={{ title: "Create Account" }} />
-            <stack.Screen name="login" component={LoginPage} options={{ title: "Login" }} />
-            <stack.Screen name="home" component={CustomNavigation} options={{ headerShown: false }} />
-            <stack.Screen name="adminHome" component={AdminBottomBarNav} options={{ headerShown: false }} />
-            <stack.Screen
-              name="foodCategory"
-              component={FoodCategoryList}
-              options={{
-                title: "Food Category",
-                headerStyle: {
-                  backgroundColor: "coral",
-                },
-              }}
-            />
-            <stack.Screen name="itemDes" component={ItemDes} options={{ title: "Item Description", headerStyle: { backgroundColor: "coral" } }} />
-          </stack.Navigator>
+          <AppStack />
         </NavigationContainer>
       </View>
     );
