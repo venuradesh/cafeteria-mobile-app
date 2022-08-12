@@ -12,8 +12,8 @@ const Home = ({ navigation }) => {
   const [pickupClick, setPickupClick] = useState(false);
   const categoryData = [
     {
-      title: "Fast Food",
-      name: "fastfood",
+      title: "Rice and Curry",
+      name: "Rice and Curry",
       key: "1",
       activeStatus: "active",
       image: { uri: "https://i0.wp.com/post.healthline.com/wp-content/uploads/2021/07/Starbucks_Food_Spinach_Feta_Wrap-1296x728-header.jpg?w=1155&h=1528" },
@@ -21,21 +21,21 @@ const Home = ({ navigation }) => {
     {
       title: "Fried Rice",
       key: "2",
-      name: "friedrice",
+      name: "Fried Rice",
       activeStatus: "",
       image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" },
     },
     {
       title: "Short Eats",
       key: "3",
-      name: "shorteats",
+      name: "Short Eats",
       activeStatus: "",
       image: { uri: "https://static.showit.co/800/D0xOCAJuS2-072g0uUIOyQ/shared/mutton_rolls.jpg" },
     },
     {
       title: "Juice",
       key: "4",
-      name: "juice",
+      name: "Juice",
       activeStatus: "",
       image: { uri: "https://media.istockphoto.com/photos/orange-juice-splash-picture-id537837754?k=20&m=537837754&s=612x612&w=0&h=D69GxC3Mlw--eqvtIk7kBTjC6tqG-dWdcvRl5Aoq49w=" },
     },

@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import React, { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 //components
 import globalStyles from "../Globals/globalStyles";
@@ -11,6 +13,8 @@ const AddItems = () => {
   const [dinner, setDinner] = useState(false);
   const [foodItemName, setFoodItemName] = useState("");
   const [price, setPrice] = useState("");
+  const [foodType, setFoodType] = useState("");
+  const [venue, setVenue] = useState("");
 
   const onBreakFastClick = () => {
     setBreakFast(true);
@@ -28,9 +32,36 @@ const AddItems = () => {
     setDinner(true);
   };
 
-  const checkLogin = () => {};
+  const addItem = () => {
+    var link="";
+    var mealsTime="";
 
-  const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats"];
+    if(breakfast){ mealsTime='brekfast';}
+    else if(lunch){ mealsTime='lunch';}
+    else{mealsTime='dinner';}
+
+    if(foodType=='Fried Rice'){link='https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg'}
+    else if(foodType=='Rice and Curry'){link='https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg'}
+    if(foodType=='Short Eats'){link='https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg'}
+    else{link='https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900'}
+    
+    const ref = doc(collection(db,"foods"));
+    const docRef = addDoc(collection(db, "foods"), {
+      name: foodItemName,
+      time: Date.now(),
+      mealsTime:mealsTime,
+      price: price,
+      foodType: foodType,
+      key:ref.id,
+      image:{uri:link},
+      venue:venue
+    });
+  
+  console.log("Document written with ID: ", docRef.id);
+  };
+
+  const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats","Juice"];
+  const venueList=["Main Canteen","Shiwa Canteen","Shawarma"];
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -60,6 +91,7 @@ const AddItems = () => {
         <SelectDropdown
           data={ItemList}
           onSelect={(selectedItem, index) => {
+            setFoodType(selectedItem);
             console.log(selectedItem);
           }}
           buttonStyle={{
@@ -79,8 +111,33 @@ const AddItems = () => {
           defaultButtonText="Select the food"
         />
       </View>
+      <View style={styles.dropdown}>
+        <Text style={[styles.inputTextContent, styles.dropDownItem]}>Select Venue</Text>
+        <SelectDropdown
+          data={venueList}
+          onSelect={(selectedVenue, index) => {
+            setVenue(selectedVenue);
+            console.log(selectedVenue);
+          }}
+          buttonStyle={{
+            width: 200,
+            height: 50,
+          }}
+          buttonTextStyle={{
+            fontSize: 16,
+            color: "#bfbfbf",
+          }}
+          buttonTextAfterSelection={(selectedVenue, index) => {
+            return selectedVenue;
+          }}
+          rowTextForSelection={(item, index) => {
+            return item;
+          }}
+          defaultButtonText="Select the Venue"
+        />
+      </View>
       <View style={[styles.btnContainer, styles.submitBtnContainer]}>
-        <Pressable style={[styles.btn, styles.btnSubmit]} onPress={checkLogin}>
+        <Pressable style={[styles.btn, styles.btnSubmit]} onPress={addItem}>
           <Text style={styles.btnContent}>Submit</Text>
         </Pressable>
         <Pressable style={[styles.btn, styles.btnReset]}>
