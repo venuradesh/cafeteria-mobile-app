@@ -36,7 +36,6 @@ const FoodCategoryList = ({ route, navigation }) => {
     });
   }, []);
   const onItemClick = (itemDetails) => {
-    console.log(itemDetails);
     navigation.navigate("itemDes", { itemDetails });
   };
 
