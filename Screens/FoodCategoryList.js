@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, FlatList, Image } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, FlatList, Image, SafeAreaView, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
@@ -8,12 +8,39 @@ import { db } from "../Firebase/firebase";
 import globalStyles from "../Globals/globalStyles";
 
 const FoodCategoryList = ({ route, navigation }) => {
+  const [arrayList,setArrayList]=useState([]);
   const dataList = [
     { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" } },
     { name: "Fast Food", key: "2", price: "Rs 150/-", venue: "Shiwa Canteen", image: { uri: "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg" } },
     { name: "Mega rice", key: "3", price: "Rs 400/-", venue: "Main canteen", image: { uri: "https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg" } },
     { name: "Chilli Rice", key: "4", price: "Rs 250/-", venue: "Shawarma", image: { uri: "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900" } },
   ];
+
+  useEffect(()=>{
+    var t=false;
+    var size=arrayList.length;
+    const q = query(collection(db, "foods"),where('foodType','==',route.params.itemName));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var t=true;
+        for(let i=0;i<size;i++){
+          if(arrayList[i].key == doc.data().key){
+            t=false;
+            break;
+          }
+        }
+        if(t){
+          setArrayList(prev=>[...prev,doc.data()]);
+        }
+        
+      });
+    });
+    
+    
+  }, []);
+  const onItemClick=(item)=>{
+    console.log(item.name);
+  }
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -22,7 +49,7 @@ const FoodCategoryList = ({ route, navigation }) => {
       </View>
       <View style={styles.itemsListContainer}>
         <FlatList
-          data={dataList}
+          data={arrayList}
           horizontal={false}
           renderItem={({ item }) => {
             return (

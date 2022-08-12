@@ -13,30 +13,36 @@ const LoginPage = ({ navigation }) => {
   const checkLogin = async () => {
     try {
       var t = false;
-
       const querySnapshot1 = await getDocs(collection(db, "clients"));
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
           t = true;
           setUserId(doc.id);
-          console.log(doc.id);
+          resetBtn();
           navigation.navigate("home");
         }
       });
       const querySnapshot2 = await getDocs(collection(db, "caterers"));
       querySnapshot2.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
-          console.log("Caterer" + doc.data().userName + " " + doc.data().password);
-          navigation.navigate("adminHome");
           setUserId(doc.id);
-          console.log(doc.id);
           t = true;
+          resetBtn();
+          navigation.navigate("adminHome");
         }
       });
+      if(!t){
+        setPasswordIncorrect(true);
+      }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
+
+  const resetBtn=()=>{
+    setPassword('');
+    setUserName('');
+  }
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -65,7 +71,7 @@ const LoginPage = ({ navigation }) => {
           <Pressable style={[styles.btn, styles.btnSubmit]} onPress={checkLogin}>
             <Text style={styles.btnContent}>Submit</Text>
           </Pressable>
-          <Pressable style={[styles.btn, styles.btnReset]}>
+          <Pressable style={[styles.btn, styles.btnReset]} onPress={resetBtn}>
             <Text style={styles.btnContent}>Reset</Text>
           </Pressable>
         </View>

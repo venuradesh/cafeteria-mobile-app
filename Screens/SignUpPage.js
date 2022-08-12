@@ -80,7 +80,6 @@ export default function () {
         setUserNametaken(true);
       });
     });
-    console.log(userName);
     const qq = query(collection(db, "caterers"),where('userName','==',userName));
     const cater = onSnapshot(qq, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
