@@ -58,6 +58,7 @@ const MyOrders = () => {
               <View style={styles.contentContainer}>
                 <View style={styles.titleContainer}>
                   <Text style={styles.title}>{item.itemName}</Text>
+                  <Text style={styles.quantity}>orderId: {item.orderId}</Text>
                 </View>
                 <View style={styles.quantityPriceContainer}>
                   <Text style={styles.quantity}>Quantity: {item.quantity}</Text>

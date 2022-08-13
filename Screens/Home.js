@@ -1,5 +1,5 @@
 //dependencies
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable, Image, FlatList } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -14,6 +14,21 @@ const Home = () => {
   const [pickupClick, setPickupClick] = useState(false);
   const navigation=useNavigation();
   const route=useRoute();
+
+  useEffect(()=>{
+    let time=new Date().getHours();
+    console.log(time);
+    if(time>4 && time<8){
+      global.mealTime='breakfirst';
+    }
+    else if(time>8 && time<12){
+      global.mealTime='lunch';
+    }
+    else if(time>14 && time<23){
+      global.mealTime='dinner';
+    }
+    console.log(global.mealTime);
+  },[])
   const categoryData = [
     {
       title: "Rice and Curry",
@@ -93,10 +108,10 @@ const Home = () => {
       <View style={styles.locationContainer}>
         <Pressable style={styles.location} onPress={onLocation}>
           <MaterialIcons name="location-pin" size={24} color="#595959" />
-          <Text style={styles.locationText}>Nilaweli Hostel</Text>
+          <Text style={styles.locationText}>{global.hostel}</Text>
           <Pressable style={styles.time} onPress={onTime}>
             <MaterialIcons name="access-time" size={24} color="#595959" />
-            <Text style={styles.timeText}>Now</Text>
+            <Text style={styles.timeText}>{global.mealTime}</Text>
           </Pressable>
         </Pressable>
         <Entypo name="sound-mix" size={24} color="#595959" />

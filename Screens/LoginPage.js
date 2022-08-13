@@ -30,6 +30,7 @@ const LoginPage = () => {
           global.user='client';
           global.id=userid;
           global.userName=userName;
+          global.hostel=doc.data().hostel;
           resetBtn();
           setPasswordIncorrect(false);
           navigation.navigate("home", {userid:userid });

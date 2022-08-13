@@ -14,7 +14,7 @@ const ItemDes = () => {
   const navigation=useNavigation();
   const route=useRoute();
   const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys ","Marbel Girls"];
-  const mealsTime="breakfast";
+  const mealsTime=global.mealTime;
   const orderNow =async () => {
     try{
       const userid=route.params.userid;
