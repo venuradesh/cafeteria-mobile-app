@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, TextInput, View, KeyboardAvoidingView } from "react-native";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 const ItemDes = ({ route, navigation }) => {
   const [orderClick, setOrderClick] = useState(false);
@@ -7,7 +9,26 @@ const ItemDes = ({ route, navigation }) => {
   const [address, setAddress] = useState("");
   const [err, setError] = useState(false);
 
-  const orderNow = () => {};
+  const orderNow =async () => {
+    try{
+      console.log(address);
+      console.log(quantity);
+      const ref = doc(collection(db,"orders"));
+      const docRef = await addDoc(collection(db, "orders"), {
+        itemName: route.params.itemDetails.name,
+        itemId: route.params.itemDetails.key,
+        address: address,
+        quantity: quantity,
+        status:'On the way' , 
+        orderId:ref.id
+      });
+      console.log("Document written with ID: ", docRef.id);
+    }
+    catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    
+  };
 
   return (
     <View>
