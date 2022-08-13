@@ -3,20 +3,17 @@ import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 //components
 import globalStyles from "../Globals/globalStyles";
 
-const FoodCategoryList = ({ route, navigation }) => {
-  console.log(route.params);
+const FoodCategoryList = () => {
   const [arrayList, setArrayList] = useState([]);
-  const dataList = [
-    { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" } },
-    { name: "Fast Food", key: "2", price: "Rs 150/-", venue: "Shiwa Canteen", image: { uri: "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg" } },
-    { name: "Mega rice", key: "3", price: "Rs 400/-", venue: "Main canteen", image: { uri: "https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg" } },
-    { name: "Chilli Rice", key: "4", price: "Rs 250/-", venue: "Shawarma", image: { uri: "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900" } },
-  ];
-
+  const navigation =useNavigation();
+  const route=useRoute();
+  
+  
   useEffect(() => {
     var t = false;
     var size = arrayList.length;
@@ -37,7 +34,8 @@ const FoodCategoryList = ({ route, navigation }) => {
     });
   }, []);
   const onItemClick = (itemDetails) => {
-    navigation.navigate("itemDes", { itemDetails });
+    const userid=route.params.userid;
+    navigation.navigate("itemDes", { itemDetails, userid});
   };
 
   return (

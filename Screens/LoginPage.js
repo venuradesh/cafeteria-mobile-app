@@ -3,13 +3,22 @@ import React, { useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
+import { useNavigation } from "@react-navigation/native";
 
-const LoginPage = ({ navigation }) => {
+
+const LoginPage = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [userid, setUserId] = useState("");
   const [passwordIncorrect, setPasswordIncorrect] = useState(false);
-
+  const navigation=useNavigation();
+  if(global.user=='client'){
+    navigation.navigate("home", {userid:global.id });
+  }
+  else if(global.user=='client'){
+    navigation.navigate("adminHome", {userid:global.id });
+  }
+  
+  
   const checkLogin = async () => {
     try {
       var t = false;
@@ -17,18 +26,29 @@ const LoginPage = ({ navigation }) => {
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
           t = true;
-          setUserId(doc.id);
+          const userid=doc.id;
+          global.user='client';
+          global.id=userid;
+          global.userName=userName;
           resetBtn();
-          navigation.navigate("home");
+          setPasswordIncorrect(false);
+          navigation.navigate("home", {userid:userid });
+          //navigation.navigate('home', {screen: 'ScreenC',params : { param1: "foo", param2: "bar" }})
         }
       });
       const querySnapshot2 = await getDocs(collection(db, "caterers"));
       querySnapshot2.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {
-          setUserId(doc.id);
+          const userid=doc.id;
+          global.canteen=doc.data().venue;
+          global.user='caterer';
+          global.id=userid;
+          global.userName=userName;
           t = true;
+          console.log(doc.data().venue);
           resetBtn();
-          navigation.navigate("adminHome");
+          setPasswordIncorrect(false);
+          navigation.navigate("adminHome", {userid:userid });
         }
       });
       if (!t) {
@@ -40,8 +60,9 @@ const LoginPage = ({ navigation }) => {
   };
 
   const resetBtn = () => {
-    setPassword("");
-    setUserName("");
+    setPassword('');
+    setUserName('');
+    setPasswordIncorrect(false);
   };
 
   return (
@@ -53,11 +74,11 @@ const LoginPage = ({ navigation }) => {
         <View style={styles.inputItemsContainer}>
           <View style={styles.inputItem}>
             <Text style={styles.inputTextContent}>User Name</Text>
-            <TextInput style={styles.input} onChangeText={(val) => setUserName(val)} />
+            <TextInput style={styles.input} onChangeText={(val) => setUserName(val)} value={userName}/>
           </View>
           <View style={styles.inputItem}>
             <Text style={styles.inputTextContent}>Password</Text>
-            <TextInput style={styles.input} secureTextEntry={true} onChangeText={(val) => setPassword(val)} />
+            <TextInput style={styles.input} secureTextEntry={true} onChangeText={(val) => setPassword(val)} value={password} />
           </View>
         </View>
         {passwordIncorrect ? (

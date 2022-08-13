@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+
 
 //components
 import Home from "../Screens/Home";
@@ -14,6 +16,7 @@ import Header from "./Header";
 const Tabs = createBottomTabNavigator();
 
 const CustomNavigation = ({ navigation }) => {
+  const route=useRoute();
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
@@ -37,10 +40,10 @@ const CustomNavigation = ({ navigation }) => {
         tabBarInactiveTintColor: "#BFBFBF",
       })}
     >
-      <Tabs.Screen name="home" component={Home} options={{ header: () => <Header navigation={navigation} /> }} />
-      <Tabs.Screen name="search" component={Search} options={{ header: () => <Header /> }} />
-      <Tabs.Screen name="MyOrders" component={MyOrders} options={{ header: () => <Header /> }} />
-      <Tabs.Screen name="profileClient" component={ProfileClient} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="home" component={Home} initialParams={{params:route.params}} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="search" component={Search} initialParams={{params:route.params}} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="MyOrders" component={MyOrders} initialParams={{params:route.params}} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="profileClient" component={ProfileClient} initialParams={{params:route.params}} options={{ header: () => <Header /> }} />
     </Tabs.Navigator>
   );
 };

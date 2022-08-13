@@ -2,27 +2,37 @@ import React, { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, TextInput, View, KeyboardAvoidingView } from "react-native";
 import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import SelectDropdown from "react-native-select-dropdown";
 
-const ItemDes = ({ route, navigation }) => {
+
+const ItemDes = () => {
   const [orderClick, setOrderClick] = useState(false);
   const [quantity, setQuantity] = useState("");
-  const [address, setAddress] = useState("");
+  const [hostel, setHostel] = useState("");
   const [err, setError] = useState(false);
-
+  const navigation=useNavigation();
+  const route=useRoute();
+  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys ","Marbel Girls"];
+  const mealsTime="breakfast";
   const orderNow =async () => {
     try{
-      console.log(address);
-      console.log(quantity);
+      const userid=route.params.userid;
       const ref = doc(collection(db,"orders"));
       const docRef = await addDoc(collection(db, "orders"), {
         itemName: route.params.itemDetails.name,
         itemId: route.params.itemDetails.key,
-        address: address,
+        hostel: hostel,
         quantity: quantity,
-        status:'On the way' , 
-        orderId:ref.id
+        status:'Pending' , 
+        orderId:ref.id,
+        image:route.params.itemDetails.image,
+        total:quantity*route.params.itemDetails.price,
+        userid:userid,
+        userName:global.userName,
+        mealsTime:mealsTime
       });
-      console.log("Document written with ID: ", docRef.id);
+      navigation.navigate("MyOrders", { userid });
     }
     catch (e) {
       console.error("Error adding document: ", e);
@@ -53,19 +63,42 @@ const ItemDes = ({ route, navigation }) => {
         <View style={styles.orderNowContainer}>
           <View style={styles.quantity}>
             <Text style={styles.inputTextContent}>Quantity</Text>
-            <TextInput style={styles.input} onChange={(val) => setQuantity(val)} />
-            {err ? (
+            <TextInput style={styles.input} onChangeText={(val) => {setQuantity(val)}} />
+            {/* {err ? (
               <View>
                 <Text style={styles.inputError}>Only Numbers are allowed</Text>
               </View>
             ) : (
               <View></View>
-            )}
+            )} */}
           </View>
-          <KeyboardAvoidingView style={styles.address}>
-            <Text style={styles.inputTextContent}>Address</Text>
-            <TextInput style={styles.input} onChange={(val) => setAddress(val)} />
-          </KeyboardAvoidingView>
+          {/* <KeyboardAvoidingView style={styles.address}> */}
+          <View style={styles.dropdown}>
+          <Text style={[styles.inputTextContent, styles.dropDownItem]}>Select Hostel</Text>
+          <SelectDropdown
+            data={venueList}
+            onSelect={(selectedVenue, index) => {
+              setHostel(selectedVenue);
+              console.log(selectedVenue);
+            }}
+            buttonStyle={{
+              width: 200,
+              height: 50,
+            }}
+            buttonTextStyle={{
+              fontSize: 16,
+              color: "#bfbfbf",
+            }}
+            buttonTextAfterSelection={(selectedVenue, index) => {
+              return selectedVenue;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            defaultButtonText="Select the Hostel"
+          />
+          </View>
+          {/* </KeyboardAvoidingView> */}
           <KeyboardAvoidingView style={[styles.btnContainer, styles.btnContainerOrderNow]}>
             <Pressable style={[styles.btn, styles.orderBtn]} onPress={() => orderNow()}>
               <Text style={[styles.orderContent, styles.orderNow]}>Order Now</Text>

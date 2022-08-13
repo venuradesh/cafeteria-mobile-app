@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
 import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
+import SelectDropdown from "react-native-select-dropdown";
 
 //global styles
 import globalStyles from "../Globals/globalStyles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function () {
   const [userName, setUserName] = useState("");
@@ -13,12 +15,16 @@ export default function () {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [cateringServiceName, setCateringServiceName] = useState("");
-  const [address, setAddress] = useState("");
+  const [venue, setVenue] = useState("");
+  const [hostel, setHostel] = useState("");
   const [customerClick, setCustomerClick] = useState(true);
   const [catererClick, setCatererClick] = useState(false);
   const [userNametaken, setUserNametaken] = useState(false);
   const [userId, setUserId] = useState('');
 
+  const navigation=useNavigation();
+
+  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys ","Marbel Girls"];
   const onCustomerClick = () => {
     setCatererClick(false);
     setCustomerClick(true);
@@ -39,6 +45,7 @@ export default function () {
           phoneNumber: phoneNumber,
           password: password,
           userName: userName,
+          hostel:hostel,
           userId:ref.id
         });
       
@@ -61,10 +68,11 @@ export default function () {
         password: password,
         userName: userName,
         cateringServiceName: cateringServiceName,
-        address: address,
+        venue: venue,
         userId:ref.id
       });
-      console.log("Document written with ID: ", docRef.id);
+      navigation.navigate('login');
+      //console.log("Document written with ID: ", docRef.id);
       //navigation.navigate("login");
     }
     } catch (e) {
@@ -95,7 +103,7 @@ export default function () {
   const btnReset= () =>{
     setUserName('');
     setPassword('');
-    setAddress('');
+    setVenue('');
     setCateringServiceName('');
     setFirstName('');
     setLastName('');
@@ -145,6 +153,33 @@ export default function () {
                 <Text style={styles.inputTextContent}>Password</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password}/>
               </View>
+
+              <View style={styles.dropdown}>
+                <Text style={[styles.inputTextContent, styles.dropDownItem]}>Select Hostel</Text>
+                <SelectDropdown
+                  data={venueList}
+                  onSelect={(selectedVenue, index) => {
+                    setHostel(selectedVenue);
+                    console.log(selectedVenue);
+                  }}
+                  buttonStyle={{
+                    width: 200,
+                    height: 50,
+                  }}
+                  buttonTextStyle={{
+                    fontSize: 16,
+                    color: "#bfbfbf",
+                  }}
+                  buttonTextAfterSelection={(selectedVenue, index) => {
+                    return selectedVenue;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  defaultButtonText="Select the Hostel"
+                />
+              </View>
+
               <Pressable style={[styles.btnFacebook, styles.btnSubmit]} onPress={addClientData}>
                 <Text style={styles.textBtn}>Submit</Text>
               </Pressable>
@@ -187,9 +222,11 @@ export default function () {
                 <Text style={styles.inputTextContent}>Catering Service Name</Text>
                 <TextInput style={styles.input} onChangeText={(val) => setCateringServiceName(val)} value={cateringServiceName}/>
               </View>
+              
+              
               <View style={styles.item}>
-                <Text style={styles.inputTextContent}>Address</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setAddress(val)} value={address}/>
+                <Text style={styles.inputTextContent}>Venue</Text>
+                <TextInput style={styles.input} onChangeText={(val) => setVenue(val)} value={venue}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Password</Text>

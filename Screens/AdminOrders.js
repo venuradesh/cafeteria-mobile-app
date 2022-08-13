@@ -1,16 +1,43 @@
 import { Pressable, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 const AdminOrders = () => {
+  const [arrayList, setArrayList] = useState([]);
   const dataList = [
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
   ];
 
+  useEffect(() => {
+    
+    var t = false;
+    var size = arrayList.length;
+    const q = query(collection(db, "orders"),where("status","==","Pending"));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var t = true;
+        for (let i = 0; i < size; i++) {
+          if (arrayList[i].orderId == doc.data().orderId) {
+            t = false;
+            break;
+          }
+        }
+        if (t) {
+          setArrayList((prev) => [...prev, doc.data()]);
+        }
+      });
+    });
+  }, []);
+
+
   const onDelivered = () => {};
+
+  
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -19,19 +46,25 @@ const AdminOrders = () => {
       </View>
       <View style={styles.itemListContainer}>
         <FlatList
-          data={dataList}
+          data={arrayList}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <View style={styles.itemTitle}>
-                <Text style={styles.itemTitleContent}>{item.name}</Text>
+                <Text style={styles.itemTitleContent}>{item.itemName}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
-                <Text style={styles.quantity}>Qty: {item.quantity}</Text>
-                <Text style={styles.price}>Rs. {item.totalPrice}/-</Text>
+                <Text style={styles.quantity}>UserName:{item.userName}</Text>
+              </View>
+              <View style={styles.quantityPriceContainer}>
+                <Text style={styles.quantity}>Order Id: {item.orderId}</Text>
+              </View>
+              <View style={styles.quantityPriceContainer}>
+                <Text style={styles.quantity}>Qty:{item.quantity}</Text>
+                <Text style={styles.price}>Rs. {item.total}/-</Text>
               </View>
               <View style={styles.addressContainer}>
                 <View style={styles.address}>
-                  <Text style={styles.addressContent}>address: {item.address}</Text>
+                  <Text style={styles.addressContent}>Hostel: {item.hostel}</Text>
                 </View>
               </View>
               <View style={styles.btnContainer}>

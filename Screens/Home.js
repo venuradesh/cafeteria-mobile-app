@@ -3,13 +3,17 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable, Image, FlatList } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 
 //components
 import globalStyles from "../Globals/globalStyles";
+import { useNavigation } from "@react-navigation/native";
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const [deliveryClick, setDeliveryClick] = useState(true);
   const [pickupClick, setPickupClick] = useState(false);
+  const navigation=useNavigation();
+  const route=useRoute();
   const categoryData = [
     {
       title: "Rice and Curry",
@@ -72,7 +76,8 @@ const Home = ({ navigation }) => {
   const onTime = () => {};
 
   const onItemClick = (itemName) => {
-    navigation.navigate("foodCategory", { itemName });
+    const userid=route.params.params.params.userid;
+    navigation.navigate("foodCategory", { itemName,userid });
   };
 
   return (

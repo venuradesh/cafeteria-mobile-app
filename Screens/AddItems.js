@@ -61,7 +61,8 @@ const AddItems = () => {
   };
 
   const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats","Juice"];
-  const venueList=["Main Canteen","Shiwa Canteen","Shawarma"];
+  console.log(global.canteen);
+  const venueList=[global.canteen];
 
   return (
     <View style={[globalStyles.container, styles.container]}>

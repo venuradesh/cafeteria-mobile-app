@@ -1,12 +1,15 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { useState } from "react";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 const AdminHome = () => {
   const [breakfast, setBreakFast] = useState(true);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
+  const [arrayList, setArrayList] = useState([]);
 
   const onBreakFastClick = () => {
     setBreakFast(true);
@@ -23,6 +26,27 @@ const AdminHome = () => {
     setLunch(false);
     setDinner(true);
   };
+
+  useEffect(() => {
+    
+    var t = false;
+    var size = arrayList.length;
+    const q = query(collection(db, "orders"),where("status","==","Pending"));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var t = true;
+        for (let i = 0; i < size; i++) {
+          if (arrayList[i].orderId == doc.data().orderId) {
+            t = false;
+            break;
+          }
+        }
+        if (t) {
+          setArrayList((prev) => [...prev, doc.data()]);
+        }
+      });
+    });
+  }, []);
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -44,7 +68,7 @@ const AdminHome = () => {
       </View>
       <View style={[styles.pendingCountContainer, styles.boxWrapper]}>
         <View style={[styles.pendingCount, styles.boxContainer]}>
-          <Text style={[styles.pendingCountContent, styles.boxContent]}>To be Delivered: 3</Text>
+          <Text style={[styles.pendingCountContent, styles.boxContent]}>To be Delivered: {arrayList.length}</Text>
         </View>
       </View>
       <Pressable style={[styles.boxWrapper, styles.activeContainer]}>

@@ -1,13 +1,38 @@
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 const MyOrders = () => {
-  const dataList = [
-    { name: "Fried Rice", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" }, activeStatus: "pending", quantity: "2", totalPrice: "400" },
-    { name: "Fried Rice", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" }, activeStatus: "pending", quantity: "2", totalPrice: "400" },
-    { name: "Fried Rice", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" }, activeStatus: "pending", quantity: "2", totalPrice: "400" },
-  ];
+  const [arrayList, setArrayList] = useState([]);
+  const route=useRoute();
+  const navigation=useNavigation();
+  const userid=route.params.params.params.userid;
+  console.log(userid);
+  
+  useEffect(() => {
+    
+    var t = false;
+    var size = arrayList.length;
+    const q = query(collection(db, "orders"), where("userid", "==", userid));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var t = true;
+        for (let i = 0; i < size; i++) {
+          if (arrayList[i].orderId == doc.data().orderId) {
+            t = false;
+            break;
+          }
+        }
+        if (t) {
+          setArrayList((prev) => [...prev, doc.data()]);
+        }
+      });
+    });
+  }, []);
+
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -18,13 +43,13 @@ const MyOrders = () => {
       </View>
       <View style={[styles.pendingCountContainer, styles.boxWrapper]}>
         <View style={[styles.pendingCount, styles.boxContainer]}>
-          <Text style={[styles.pendingCountContent, styles.boxContent]}>Pending Orders: 3</Text>
+          <Text style={[styles.pendingCountContent, styles.boxContent]}>Pending Orders: {arrayList.length}</Text>
         </View>
       </View>
       <Text style={styles.pendings}>Pendings</Text>
       <View style={styles.pendingListContainer}>
         <FlatList
-          data={dataList}
+          data={arrayList}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <View style={styles.imageContainer}>
@@ -32,14 +57,14 @@ const MyOrders = () => {
               </View>
               <View style={styles.contentContainer}>
                 <View style={styles.titleContainer}>
-                  <Text style={styles.title}>{item.name}</Text>
+                  <Text style={styles.title}>{item.itemName}</Text>
                 </View>
                 <View style={styles.quantityPriceContainer}>
                   <Text style={styles.quantity}>Quantity: {item.quantity}</Text>
-                  <Text style={styles.price}>Total Price: Rs. {item.totalPrice}/-</Text>
+                  <Text style={styles.price}>Total Price: Rs. {item.total}/-</Text>
                 </View>
                 <View style={styles.activeContainer}>
-                  <Text style={styles.status}>Status: {item.activeStatus}</Text>
+                  <Text style={styles.status}>Status: {item.status}</Text>
                 </View>
               </View>
             </View>
