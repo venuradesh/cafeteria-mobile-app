@@ -13,7 +13,7 @@ import Header from "./Header";
 
 const Tabs = createBottomTabNavigator();
 
-const CustomNavigation = () => {
+const CustomNavigation = ({ navigation }) => {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
@@ -37,7 +37,7 @@ const CustomNavigation = () => {
         tabBarInactiveTintColor: "#BFBFBF",
       })}
     >
-      <Tabs.Screen name="home" component={Home} options={{ header: () => <Header /> }} />
+      <Tabs.Screen name="home" component={Home} options={{ header: () => <Header navigation={navigation} /> }} />
       <Tabs.Screen name="search" component={Search} options={{ header: () => <Header /> }} />
       <Tabs.Screen name="MyOrders" component={MyOrders} options={{ header: () => <Header /> }} />
       <Tabs.Screen name="profileClient" component={ProfileClient} options={{ header: () => <Header /> }} />

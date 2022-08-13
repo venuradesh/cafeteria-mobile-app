@@ -8,6 +8,7 @@ import { db } from "../Firebase/firebase";
 import globalStyles from "../Globals/globalStyles";
 
 const FoodCategoryList = ({ route, navigation }) => {
+  console.log(route.params);
   const [arrayList, setArrayList] = useState([]);
   const dataList = [
     { name: "Fried Rice", key: "1", price: "Rs 200/-", venue: "Main Canteen", image: { uri: "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg" } },
@@ -36,7 +37,7 @@ const FoodCategoryList = ({ route, navigation }) => {
     });
   }, []);
   const onItemClick = (itemDetails) => {
-    navigation.navigate("itemDes", {itemDetails});
+    navigation.navigate("itemDes", { itemDetails });
   };
 
   return (

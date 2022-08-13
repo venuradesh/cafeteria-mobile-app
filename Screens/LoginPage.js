@@ -31,7 +31,7 @@ const LoginPage = ({ navigation }) => {
           navigation.navigate("adminHome");
         }
       });
-      if(!t){
+      if (!t) {
         setPasswordIncorrect(true);
       }
     } catch (e) {
@@ -39,10 +39,10 @@ const LoginPage = ({ navigation }) => {
     }
   };
 
-  const resetBtn=()=>{
-    setPassword('');
-    setUserName('');
-  }
+  const resetBtn = () => {
+    setPassword("");
+    setUserName("");
+  };
 
   return (
     <View style={[globalStyles.container, styles.container]}>
