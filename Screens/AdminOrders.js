@@ -1,14 +1,146 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
+import globalStyles from "../Globals/globalStyles";
+import { FlatList } from "react-native-gesture-handler";
 
 const AdminOrders = () => {
+  const dataList = [
+    { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
+    { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
+    { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
+  ];
+
+  const onDelivered = () => {};
+
   return (
-    <View>
-      <Text>AdminOrders</Text>
+    <View style={[globalStyles.container, styles.container]}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Orders To Deliver</Text>
+      </View>
+      <View style={styles.itemListContainer}>
+        <FlatList
+          data={dataList}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <View style={styles.itemTitle}>
+                <Text style={styles.itemTitleContent}>{item.name}</Text>
+              </View>
+              <View style={styles.quantityPriceContainer}>
+                <Text style={styles.quantity}>Qty: {item.quantity}</Text>
+                <Text style={styles.price}>Rs. {item.totalPrice}/-</Text>
+              </View>
+              <View style={styles.addressContainer}>
+                <View style={styles.address}>
+                  <Text style={styles.addressContent}>address: {item.address}</Text>
+                </View>
+              </View>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity onPress={onDelivered} style={styles.btn}>
+                  <Text style={styles.btnText}>Mark As Delivered</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
 
 export default AdminOrders;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+
+  titleContainer: {
+    width: "100%",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  title: {
+    width: "100%",
+    fontSize: 28,
+    color: "coral",
+    fontWeight: "800",
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
+
+  itemListContainer: {
+    flex: 1,
+    marginTop: 20,
+  },
+
+  itemContainer: {
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: "#bfbfbf",
+    marginBottom: 20,
+    padding: 20,
+  },
+
+  itemTitle: {
+    width: "100%",
+    marginBottom: 5,
+  },
+
+  itemTitleContent: {
+    width: "100%",
+    fontSize: 24,
+    fontWeight: "800",
+    color: "coral",
+  },
+
+  quantityPriceContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+
+  quantity: {
+    fontSize: 18,
+    color: "#bfbfbf",
+  },
+
+  price: {
+    fontSize: 24,
+  },
+
+  addressContainer: {
+    width: "100%",
+    marginBottom: 20,
+  },
+
+  addressContent: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: "#bfbfbf",
+  },
+
+  btnContainer: {
+    width: "100%",
+  },
+
+  btn: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "coral",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  btnText: {
+    width: "100%",
+    textAlign: "center",
+    color: "white",
+    fontSize: 18,
+    fontWeight: "800",
+  },
+});
