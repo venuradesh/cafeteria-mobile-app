@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import React, { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
-import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 
 //components
@@ -33,36 +33,45 @@ const AddItems = () => {
   };
 
   const addItem = () => {
-    var link="";
-    var mealsTime="";
+    var link = "";
+    var mealsTime = "";
 
-    if(breakfast){ mealsTime='brekfast';}
-    else if(lunch){ mealsTime='lunch';}
-    else{mealsTime='dinner';}
+    if (breakfast) {
+      mealsTime = "brekfast";
+    } else if (lunch) {
+      mealsTime = "lunch";
+    } else {
+      mealsTime = "dinner";
+    }
 
-    if(foodType=='Fried Rice'){link='https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg'}
-    else if(foodType=='Rice and Curry'){link='https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg'}
-    if(foodType=='Short Eats'){link='https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg'}
-    else{link='https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900'}
-    
-    const ref = doc(collection(db,"foods"));
+    if (foodType == "Fried Rice") {
+      link = "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg";
+    } else if (foodType == "Rice and Curry") {
+      link = "https://www.unileverfoodsolutions.lk/dam/global-ufs/mcos/meps/sri-lanka/calcmenu/recipes/LK-recipes/general/chicken-fried-rice/main-header.jpg";
+    }
+    if (foodType == "Short Eats") {
+      link = "https://redhousespice.com/wp-content/uploads/2022/03/chinese-pork-fried-rice-1-scaled.jpg";
+    } else {
+      link = "https://static.toiimg.com/thumb/53991927.cms?width=1200&height=900";
+    }
+
+    const ref = doc(collection(db, "foods"));
     const docRef = addDoc(collection(db, "foods"), {
       name: foodItemName,
       time: Date.now(),
-      mealsTime:mealsTime,
+      mealsTime: mealsTime,
       price: price,
       foodType: foodType,
-      key:ref.id,
-      image:{uri:link},
-      venue:venue
+      key: ref.id,
+      image: { uri: link },
+      venue: venue,
     });
-  
-  console.log("Document written with ID: ", docRef.id);
+
+    console.log("Document written with ID: ", docRef.id);
   };
 
-  const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats","Juice"];
-  console.log(global.canteen);
-  const venueList=[global.canteen];
+  const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats", "Juice"];
+  const venueList = [global.canteen];
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -134,7 +143,7 @@ const AddItems = () => {
           rowTextForSelection={(item, index) => {
             return item;
           }}
-          defaultButtonText="Select the Venue"
+          defaultButtonText={venueList[0]}
         />
       </View>
       <View style={[styles.btnContainer, styles.submitBtnContainer]}>
