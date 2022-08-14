@@ -13,58 +13,38 @@ import { useNavigation } from "@react-navigation/native";
 const Home = () => {
   const [deliveryClick, setDeliveryClick] = useState(true);
   const [pickupClick, setPickupClick] = useState(false);
-  const navigation=useNavigation();
-  const route=useRoute();
-  const [min,setMin]=useState(59);
-  const [sec,setSec]=useState(1);
-  
-  const mealTimeList=["breakfirst","dinner","lunch"];
+  const navigation = useNavigation();
+  const route = useRoute();
+  const [min, setMin] = useState(59);
+  const [sec, setSec] = useState(1);
+
+  const mealTimeList = ["breakfirst", "dinner", "lunch"];
   console.log(sec);
-  const updateMin=(min)=>{
-    if(min==0){
+  const updateMin = (min) => {
+    if (min == 0) {
       setMin(59);
       console.log(min);
       updateMin(min);
     }
-    if(sec==60){
-      setMin(min-1);
+    if (sec == 60) {
+      setMin(min - 1);
       console.log(min);
       updateMin(min);
-      
     }
-    
-  }
-  const updateSec=(sec)=>{
-    if(sec==60){
+  };
+  const updateSec = (sec) => {
+    if (sec == 60) {
       setSec(0);
       console.log(sec);
       updateSec(sec);
-      
     }
-    if(sec>=0){
-      setSec(sec+1);
+    if (sec >= 0) {
+      setSec(sec + 1);
       console.log(sec);
       updateSec(sec);
-      
     }
-    
-  }
-  
+  };
 
-  useEffect(()=>{
-    let time=new Date().getHours();
-    console.log(time);
-    if(time>4 && time<8){
-      global.mealTime='breakfirst';
-    }
-    else if(time>0 && time<12){
-      global.mealTime='lunch';
-    }
-    else if(time>14 && time<3){
-      global.mealTime='dinner';
-    }
-    console.log(global.mealTime);
-  },[])
   const categoryData = [
     {
       title: "Rice and Curry",
@@ -127,8 +107,8 @@ const Home = () => {
   const onTime = () => {};
 
   const onItemClick = (itemName) => {
-    const userid=route.params.params.params.userid;
-    navigation.navigate("foodCategory", { itemName,userid });
+    const userid = route.params.params.params.userid;
+    navigation.navigate("foodCategory", { itemName, userid });
   };
 
   return (
@@ -143,35 +123,43 @@ const Home = () => {
       </View>
       <View style={styles.locationContainer}>
         <Pressable style={styles.location} onPress={onLocation}>
-          <MaterialIcons name="location-pin" size={24} color="#595959" />
-          <Text style={styles.locationText}>{global.hostel}</Text>
-          <Pressable style={styles.time} onPress={onTime}>
-            <MaterialIcons name="access-time" size={24} color="#595959" />
-            <View style={styles.dropdown}>
-            <Text style={[styles.inputTextContent, styles.dropDownItem]}>Time</Text>
-            <SelectDropdown
-              data={mealTimeList}
-              onSelect={(selectedVenue, index) => {
-                global.mealTime=selectedVenue;
-                console.log(selectedVenue);
-              }}
-              buttonStyle={{
-                width: 200,
-                height: 50,
-              }}
-              buttonTextStyle={{
-                fontSize: 16,
-                color: "#bfbfbf",
-              }}
-              buttonTextAfterSelection={(selectedVenue, index) => {
-                return selectedVenue;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              defaultButtonText="Time"
-            />
+          <View style={styles.locationContent}>
+            <MaterialIcons name="location-pin" size={24} color="#595959" />
+            <Text style={styles.locationText}>{global.hostel}</Text>
           </View>
+          <Pressable style={styles.time} onPress={onTime}>
+            {/* <MaterialIcons name="access-time" size={24} color="#595959" /> */}
+            <View style={styles.dropdown}>
+              {/* <Text style={[styles.inputTextContent, styles.dropDownItem]}>Time</Text> */}
+              <SelectDropdown
+                data={mealTimeList}
+                onSelect={(selectedVenue, index) => {
+                  global.mealTime = selectedVenue;
+                }}
+                buttonStyle={{
+                  width: 100,
+                  height: 25,
+                  borderRadius: 8,
+                  backgroundColor: "white",
+                  position: "relative",
+                  right: 90,
+                  bottom: 2,
+                }}
+                buttonTextStyle={{
+                  width: "100%",
+                  fontSize: 12,
+                  color: "black",
+                  textAlign: "center",
+                }}
+                buttonTextAfterSelection={(selectedVenue, index) => {
+                  return selectedVenue;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item;
+                }}
+                defaultButtonText="Time"
+              />
+            </View>
             <Text style={styles.timeText}>{global.mealTime}</Text>
           </Pressable>
         </Pressable>
@@ -198,8 +186,7 @@ const Home = () => {
       <View style={styles.timeContainer}>
         <Text style={styles.timeOption}>Option Changes in </Text>
         <View style={styles.minContainer}>
-          <Text style={styles.number}>{min}
-          </Text>
+          <Text style={styles.number}>{min}</Text>
           <Text style={styles.minIndicator}>min</Text>
         </View>
         <View style={styles.minContainer}>
@@ -289,29 +276,24 @@ const styles = StyleSheet.create({
   },
 
   location: {
+    flex: 1,
     flexDirection: "row",
     backgroundColor: "#E6E6E6",
     paddingVertical: 5,
     alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 5,
     borderRadius: 8,
-    flex: 1,
-    marginRight: 20,
+    marginRight: 10,
+  },
+
+  locationContent: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   locationText: {
     marginLeft: 10,
-    fontSize: 16,
-  },
-
-  time: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 8,
-    alignItems: "center",
-    marginLeft: "auto",
     fontSize: 16,
   },
 
@@ -449,11 +431,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   dropdown: {
-    width:10,
-    height:5
+    width: 10,
+    height: 5,
   },
 
   dropDownItem: {
     marginBottom: 2,
-  }
+  },
 });
