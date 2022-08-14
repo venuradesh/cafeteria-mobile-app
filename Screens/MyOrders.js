@@ -2,18 +2,17 @@ import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 
 const MyOrders = () => {
   const [arrayList, setArrayList] = useState([]);
-  const route=useRoute();
-  const navigation=useNavigation();
-  const userid=route.params.params.params.userid;
+  const route = useRoute();
+  const navigation = useNavigation();
+  const userid = route.params.params.params.userid;
   console.log(userid);
-  
+
   useEffect(() => {
-    
     var t = false;
     var size = arrayList.length;
     const q = query(collection(db, "orders"), where("userid", "==", userid));
@@ -33,15 +32,9 @@ const MyOrders = () => {
     });
   }, []);
 
-
   return (
     <View style={[globalStyles.container, styles.container]}>
-      <View style={[styles.totalOrdersContainer, styles.boxWrapper]}>
-        <View style={[styles.totalCount, styles.boxContainer]}>
-          <Text style={[styles.totalCountContent, styles.boxContent]}>Total Orders: 5</Text>
-        </View>
-      </View>
-      <View style={[styles.pendingCountContainer, styles.boxWrapper]}>
+      <View style={styles.boxWrapper}>
         <View style={[styles.pendingCount, styles.boxContainer]}>
           <Text style={[styles.pendingCountContent, styles.boxContent]}>Pending Orders: {arrayList.length}</Text>
         </View>
