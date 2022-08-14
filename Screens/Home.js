@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView, Pressable, Image, FlatList } from "
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
+import SelectDropdown from "react-native-select-dropdown";
 
 //components
 import globalStyles from "../Globals/globalStyles";
@@ -14,6 +15,41 @@ const Home = () => {
   const [pickupClick, setPickupClick] = useState(false);
   const navigation=useNavigation();
   const route=useRoute();
+  const [min,setMin]=useState(59);
+  const [sec,setSec]=useState(1);
+  
+  const mealTimeList=["breakfirst","dinner","lunch"];
+  console.log(sec);
+  const updateMin=(min)=>{
+    if(min==0){
+      setMin(59);
+      console.log(min);
+      updateMin(min);
+    }
+    if(sec==60){
+      setMin(min-1);
+      console.log(min);
+      updateMin(min);
+      
+    }
+    
+  }
+  const updateSec=(sec)=>{
+    if(sec==60){
+      setSec(0);
+      console.log(sec);
+      updateSec(sec);
+      
+    }
+    if(sec>=0){
+      setSec(sec+1);
+      console.log(sec);
+      updateSec(sec);
+      
+    }
+    
+  }
+  
 
   useEffect(()=>{
     let time=new Date().getHours();
@@ -21,10 +57,10 @@ const Home = () => {
     if(time>4 && time<8){
       global.mealTime='breakfirst';
     }
-    else if(time>8 && time<12){
+    else if(time>0 && time<12){
       global.mealTime='lunch';
     }
-    else if(time>14 && time<23){
+    else if(time>14 && time<3){
       global.mealTime='dinner';
     }
     console.log(global.mealTime);
@@ -111,6 +147,31 @@ const Home = () => {
           <Text style={styles.locationText}>{global.hostel}</Text>
           <Pressable style={styles.time} onPress={onTime}>
             <MaterialIcons name="access-time" size={24} color="#595959" />
+            <View style={styles.dropdown}>
+            <Text style={[styles.inputTextContent, styles.dropDownItem]}>Time</Text>
+            <SelectDropdown
+              data={mealTimeList}
+              onSelect={(selectedVenue, index) => {
+                global.mealTime=selectedVenue;
+                console.log(selectedVenue);
+              }}
+              buttonStyle={{
+                width: 200,
+                height: 50,
+              }}
+              buttonTextStyle={{
+                fontSize: 16,
+                color: "#bfbfbf",
+              }}
+              buttonTextAfterSelection={(selectedVenue, index) => {
+                return selectedVenue;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              defaultButtonText="Time"
+            />
+          </View>
             <Text style={styles.timeText}>{global.mealTime}</Text>
           </Pressable>
         </Pressable>
@@ -137,11 +198,12 @@ const Home = () => {
       <View style={styles.timeContainer}>
         <Text style={styles.timeOption}>Option Changes in </Text>
         <View style={styles.minContainer}>
-          <Text style={styles.number}>56</Text>
+          <Text style={styles.number}>{min}
+          </Text>
           <Text style={styles.minIndicator}>min</Text>
         </View>
         <View style={styles.minContainer}>
-          <Text style={styles.number}>51</Text>
+          <Text style={styles.number}>{sec}</Text>
           <Text style={styles.minIndicator}>sec</Text>
         </View>
       </View>
@@ -386,4 +448,12 @@ const styles = StyleSheet.create({
     color: "#BFBFBF",
     marginLeft: 10,
   },
+  dropdown: {
+    width:10,
+    height:5
+  },
+
+  dropDownItem: {
+    marginBottom: 2,
+  }
 });
