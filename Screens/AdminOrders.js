@@ -2,14 +2,14 @@ import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput } from "
 import React, { useEffect, useRef, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
-import { collection, addDoc, getDocs, onSnapshot, query, where, doc,updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc, updateDoc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
-import * as Device from 'expo-device';
-import * as Permissions from 'expo-permissions';
-import * as Notifications from 'expo-notifications';
+import * as Device from "expo-device";
+import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
 
 const AdminOrders = () => {
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -29,9 +29,7 @@ const AdminOrders = () => {
   const [marbelList, setMarbelList] = useState([]);
   const [boysHostelList, setBoysHostelList] = useState([]);
 
-  
   const [searchResults, setSearchResults] = useState([]);
-
 
   const dataList = [
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
@@ -46,11 +44,11 @@ const AdminOrders = () => {
     var nilaweliListSize = nilaweliList.length;
     var marbelListSize = marbelList.length;
     var boysHostelListSize = marbelList.length;
-    
-    const q = query(collection(db, "orders"),where("status","==","Pending"));
+
+    const q = query(collection(db, "orders"), where("status", "==", "Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
+        if (doc.data().hostel == "Sarasavi Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
             if (sarasaviGirlsList[i].notificationId == doc.data().notificationId) {
@@ -61,9 +59,7 @@ const AdminOrders = () => {
           if (t) {
             setSarasaviGirlsList((prev) => [...prev, doc.data()]);
           }
-
-        }
-        else if(doc.data().hostel=="New Sarasavi Girls" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "New Sarasavi Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < newSarasaviListSize; i++) {
             if (newSarasaviList[i].orderId == doc.data().orderId) {
@@ -74,8 +70,7 @@ const AdminOrders = () => {
           if (t) {
             setNewSarasaviList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Nilaweli Boys" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Nilaweli Boys" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < nilaweliListSize; i++) {
             if (nilaweliList[i].orderId == doc.data().orderId) {
@@ -86,8 +81,7 @@ const AdminOrders = () => {
           if (t) {
             setNilaweliList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Marbel Girls" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Marbel Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < marbelListSize; i++) {
             if (marbelList[i].orderId == doc.data().orderId) {
@@ -98,8 +92,7 @@ const AdminOrders = () => {
           if (t) {
             setMarbelList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Boys Hostel" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Boys Hostel" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < boysHostelListSize; i++) {
             if (boysHostelList[i].orderId == doc.data().orderId) {
@@ -115,45 +108,41 @@ const AdminOrders = () => {
     });
   }, []);
 
-  const onNotification = async() => {
+  const onNotification = async () => {
     try {
-      let arrayList=new Array();
-      arrayList=boysHostel?boysHostelList:(marbel?marbelList:(nilaweli?nilaweliList:(newSarasavi?newSarasaviList:sarasaviGirlsList)));
+      let arrayList = new Array();
+      arrayList = boysHostel ? boysHostelList : marbel ? marbelList : nilaweli ? nilaweliList : newSarasavi ? newSarasaviList : sarasaviGirlsList;
       console.log(arrayList);
-      for(let i=0;i<arrayList.length;i++){
-        const ref = doc(collection(db,"notifications"));
+      for (let i = 0; i < arrayList.length; i++) {
+        const ref = doc(collection(db, "notifications"));
         const docRef = await addDoc(collection(db, "notifications"), {
-          userId:arrayList[i].userid,
-          userName:arrayList[i].userName,
-          price:arrayList[i].total,
-          itemName:arrayList[i].itemName,
-          notificationId:ref.id,
-          quantity:arrayList[i].quantity
+          userId: arrayList[i].userid,
+          userName: arrayList[i].userName,
+          price: arrayList[i].total,
+          itemName: arrayList[i].itemName,
+          notificationId: ref.id,
+          quantity: arrayList[i].quantity,
         });
-        console.log("Notification Added: ", docRef.id)
+        console.log("Notification Added: ", docRef.id);
       }
-      
-    
-    
-    
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
 
-  const onDelivered=async(item)=>{
+  const onDelivered = async (item) => {
     let id;
-    const q = query(collection(db, "orders"),where('orderId','==',item.orderId));
+    const q = query(collection(db, "orders"), where("orderId", "==", item.orderId));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((d) => {
         console.log(d.id);
         const frankDocRef = doc(db, "orders", d.id);
-        const update= updateDoc(frankDocRef, {
-          "status": "Delivered"
+        const update = updateDoc(frankDocRef, {
+          status: "Delivered",
         });
-    })})
-    
-  }
+      });
+    });
+  };
 
   const OnBtnClick = (btn) => {
     switch (btn) {
@@ -203,52 +192,45 @@ const AdminOrders = () => {
   const onSearchPress = (ss) => {
     setSearchResults([]);
     setSearchFirst(true);
-    if(boysHostel){
+    if (boysHostel) {
       //setSearchResults([...boysHostelList])
-      for(let i=0;i<boysHostelList.length;i++){
-        if(boysHostelList[i].userName==ss && boysHostelList[i].venue==global.canteen){
+      for (let i = 0; i < boysHostelList.length; i++) {
+        if (boysHostelList[i].userName == ss && boysHostelList[i].venue == global.canteen) {
           setSearchResults([boysHostelList[i]]);
           break;
         }
       }
-    }
-    else if(sarasaviGirls){
-      for(let i=0;i<sarasaviGirlsList.length;i++){
-        if(sarasaviGirlsList[i].userName==ss && sarasaviGirlsList[i].venue==global.canteen){
+    } else if (sarasaviGirls) {
+      for (let i = 0; i < sarasaviGirlsList.length; i++) {
+        if (sarasaviGirlsList[i].userName == ss && sarasaviGirlsList[i].venue == global.canteen) {
           setSearchResults([sarasaviGirlsList[i]]);
           break;
         }
       }
-    }
-    else if(nilaweli){
-      for(let i=0;i<nilaweliList.length;i++){
-        if(nilaweliList[i].userName==ss && nilaweliList[i].venue==global.canteen){
+    } else if (nilaweli) {
+      for (let i = 0; i < nilaweliList.length; i++) {
+        if (nilaweliList[i].userName == ss && nilaweliList[i].venue == global.canteen) {
           setSearchResults([nilaweliList[i]]);
           break;
         }
       }
-
-    }
-    else if(marbel){
-      for(let i=0;i<marbelList.length;i++){
-        if(marbelList[i].userName==ss && marbelList[i].venue==global.canteen){
+    } else if (marbel) {
+      for (let i = 0; i < marbelList.length; i++) {
+        if (marbelList[i].userName == ss && marbelList[i].venue == global.canteen) {
           setSearchResults([marbelList[i]]);
           break;
         }
       }
-    }
-    else if(newSarasavi){
-      for(let i=0;i<newSarasaviList.length;i++){
-        if(newSarasaviList[i].userName==ss && newSarasaviList[i].venue==global.canteen){
+    } else if (newSarasavi) {
+      for (let i = 0; i < newSarasaviList.length; i++) {
+        if (newSarasaviList[i].userName == ss && newSarasaviList[i].venue == global.canteen) {
           setSearchResults([newSarasaviList[i]]);
           break;
         }
       }
     }
-
   };
 
- 
   return (
     <View style={[globalStyles.container, styles.container]}>
       <View style={styles.titleContainer}>
@@ -272,20 +254,19 @@ const AdminOrders = () => {
         </Pressable>
       </View>
       <View style={styles2.notificationBtn}>
-      <Pressable onPress={onNotification}>
-        <Text style={styles2.notificationcontent}>Send Notification</Text>
-        </Pressable>
+        <TouchableOpacity onPress={onNotification}>
+          <Text style={styles2.notificationcontent}>Send Notification</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles2.searchItems}>
-        <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val)=>setSearch(val)}/>
-        <Pressable onPress={()=>onSearchPress(search)} style={styles2.searchBtn}>
+        <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val) => setSearch(val)} />
+        <Pressable onPress={() => onSearchPress(search)} style={styles2.searchBtn}>
           <Text style={styles2.searchBtnContent}>Search</Text>
         </Pressable>
       </View>
       <View style={styles.itemListContainer}>
         <FlatList
-          data={searchFirst?searchResults:(boysHostel?boysHostelList:(sarasaviGirls?sarasaviGirlsList:(newSarasavi?newSarasaviList:(nilaweli?nilaweliList:marbelList))))}
-          
+          data={searchFirst ? searchResults : boysHostel ? boysHostelList : sarasaviGirls ? sarasaviGirlsList : newSarasavi ? newSarasaviList : nilaweli ? nilaweliList : marbelList}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <View style={styles.itemTitle}>
@@ -298,22 +279,21 @@ const AdminOrders = () => {
                 <Text style={styles.quantity}>Order Id: {item.orderId}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
-              <Text style={styles.quantity}>Tp:{item.phoneNumber}</Text>
+                <Text style={styles.quantity}>Tp:{item.phoneNumber}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
                 <Text style={styles.quantity}>Qty:{item.quantity}</Text>
-                
+
                 <Text style={styles.price}>Rs. {item.total}/-</Text>
-                
               </View>
-              
+
               <View style={styles.addressContainer}>
                 <View style={styles.address}>
                   <Text style={styles.addressContent}>Hostel: {item.hostel}</Text>
                 </View>
               </View>
               <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={()=>onDelivered(item)} style={styles.btn}>
+                <TouchableOpacity onPress={() => onDelivered(item)} style={styles.btn}>
                   <Text style={styles.btnText}>Mark As Delivered</Text>
                 </TouchableOpacity>
               </View>
