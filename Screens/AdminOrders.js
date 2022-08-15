@@ -4,12 +4,12 @@ import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
-import * as Device from 'expo-device';
-import * as Permissions from 'expo-permissions';
-import * as Notifications from 'expo-notifications';
+import * as Device from "expo-device";
+import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
 
 const AdminOrders = () => {
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -29,9 +29,7 @@ const AdminOrders = () => {
   const [marbelList, setMarbelList] = useState([]);
   const [boysHostelList, setBoysHostelList] = useState([]);
 
-  
   const [searchResults, setSearchResults] = useState([]);
-
 
   const dataList = [
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
@@ -40,20 +38,19 @@ const AdminOrders = () => {
   ];
 
   useEffect(() => {
-    console.log(".............................")
+    console.log(".............................");
     var t = false;
     var sarasaviGirlsListSize = sarasaviGirlsList.length;
     var newSarasaviListSize = newSarasaviList.length;
     var nilaweliListSize = nilaweliList.length;
     var marbelListSize = marbelList.length;
     var boysHostelListSize = marbelList.length;
-    
-    const q = query(collection(db, "orders"),where("status","==","Pending"));
+
+    const q = query(collection(db, "orders"), where("status", "==", "Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-
-        console.log(doc.data().hostel=="Nilaweli Boys");
-        if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
+        console.log(doc.data().hostel == "Nilaweli Boys");
+        if (doc.data().hostel == "Sarasavi Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
             if (sarasaviGirlsList[i].orderId == doc.data().orderId) {
@@ -65,8 +62,7 @@ const AdminOrders = () => {
             setSarasaviGirlsList((prev) => [...prev, doc.data()]);
           }
           console.log(doc.data().orderId);
-        }
-        else if(doc.data().hostel=="New Sarasavi Girls" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "New Sarasavi Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < newSarasaviListSize; i++) {
             if (newSarasaviList[i].orderId == doc.data().orderId) {
@@ -77,8 +73,7 @@ const AdminOrders = () => {
           if (t) {
             setNewSarasaviList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Nilaweli Boys" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Nilaweli Boys" && doc.data().venue == global.canteen) {
           console.log("fuck");
           var t = true;
           for (let i = 0; i < nilaweliListSize; i++) {
@@ -90,8 +85,7 @@ const AdminOrders = () => {
           if (t) {
             setNilaweliList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Marbel Girls" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Marbel Girls" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < marbelListSize; i++) {
             if (marbelList[i].orderId == doc.data().orderId) {
@@ -102,8 +96,7 @@ const AdminOrders = () => {
           if (t) {
             setMarbelList((prev) => [...prev, doc.data()]);
           }
-        }
-        else if(doc.data().hostel=="Boys Hostel" && doc.data().venue==global.canteen){
+        } else if (doc.data().hostel == "Boys Hostel" && doc.data().venue == global.canteen) {
           var t = true;
           for (let i = 0; i < boysHostelListSize; i++) {
             if (boysHostelList[i].orderId == doc.data().orderId) {
@@ -119,9 +112,7 @@ const AdminOrders = () => {
     });
   }, []);
 
-  const onDelivered = () => {
-    
-  };
+  const onDelivered = () => {};
 
   const OnBtnClick = (btn) => {
     switch (btn) {
@@ -171,114 +162,46 @@ const AdminOrders = () => {
   const onSearchPress = (ss) => {
     setSearchResults([]);
     setSearchFirst(true);
-    if(boysHostel){
+    if (boysHostel) {
       //setSearchResults([...boysHostelList])
-      for(let i=0;i<boysHostelList.length;i++){
-        if(boysHostelList[i].userName==ss && boysHostelList[i].venue==global.canteen){
+      for (let i = 0; i < boysHostelList.length; i++) {
+        if (boysHostelList[i].userName == ss && boysHostelList[i].venue == global.canteen) {
           setSearchResults([boysHostelList[i]]);
           break;
         }
       }
-    }
-    else if(sarasaviGirls){
-      for(let i=0;i<sarasaviGirlsList.length;i++){
-        if(sarasaviGirlsList[i].userName==ss && sarasaviGirlsList[i].venue==global.canteen){
+    } else if (sarasaviGirls) {
+      for (let i = 0; i < sarasaviGirlsList.length; i++) {
+        if (sarasaviGirlsList[i].userName == ss && sarasaviGirlsList[i].venue == global.canteen) {
           setSearchResults([sarasaviGirlsList[i]]);
           break;
         }
       }
-    }
-    else if(nilaweli){
-      for(let i=0;i<nilaweliList.length;i++){
-        if(nilaweliList[i].userName==ss && nilaweliList[i].venue==global.canteen){
+    } else if (nilaweli) {
+      for (let i = 0; i < nilaweliList.length; i++) {
+        if (nilaweliList[i].userName == ss && nilaweliList[i].venue == global.canteen) {
           setSearchResults([nilaweliList[i]]);
           console.log(global.searchList);
           break;
         }
       }
-
-    }
-    else if(marbel){
-      for(let i=0;i<marbelList.length;i++){
-        if(marbelList[i].userName==ss && marbelList[i].venue==global.canteen){
+    } else if (marbel) {
+      for (let i = 0; i < marbelList.length; i++) {
+        if (marbelList[i].userName == ss && marbelList[i].venue == global.canteen) {
           setSearchResults([marbelList[i]]);
           break;
         }
       }
-    }
-    else if(newSarasavi){
-      for(let i=0;i<newSarasaviList.length;i++){
-        if(newSarasaviList[i].userName==ss && newSarasaviList[i].venue==global.canteen){
+    } else if (newSarasavi) {
+      for (let i = 0; i < newSarasaviList.length; i++) {
+        if (newSarasaviList[i].userName == ss && newSarasaviList[i].venue == global.canteen) {
           setSearchResults([newSarasaviList[i]]);
           break;
         }
       }
     }
-
   };
 
-  const sendPushNotification=async(expoPushToken) =>{
-    // const message = {
-    //   to: expoPushToken,
-    //   sound: 'default',
-    //   title: 'Original Title',
-    //   body: 'And here is the body!',
-    //   data: { someData: 'goes here' },
-    // };
-  
-    // await fetch('https://exp.host/--/api/v2/push/send', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Accept-encoding': 'gzip, deflate',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(message),
-    // });
-  }
-  
-  const registerForPushNotificationsAsync=async()=> {
-    let token;
-    const {status}=await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    if(status!='granted'){
-      const {status}=await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    }
-    if(status!='granted'){
-      alert('Fail to get the push token');
-      return;
-    }
-    token = (await Notifications.getDevicePushTokenAsync());
-    return token;
-    // let token;
-    // if (Device.isDevice) {
-    //   const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    //   let finalStatus = existingStatus;
-    //   if (existingStatus !== 'granted') {
-    //     const { status } = await Notifications.requestPermissionsAsync();
-    //     finalStatus = status;
-    //   }
-    //   if (finalStatus !== 'granted') {
-    //     alert('Failed to get push token for push notification!');
-    //     return;
-    //   }
-    //   token = (await Notifications.getExpoPushTokenAsync()).data;
-    //   console.log(token);
-    // } else {
-    //   alert('Must use physical device for Push Notifications');
-    // }
-  
-    // if (Platform.OS === 'android') {
-    //   Notifications.setNotificationChannelAsync('default', {
-    //     name: 'default',
-    //     importance: Notifications.AndroidImportance.MAX,
-    //     vibrationPattern: [0, 250, 250, 250],
-    //     lightColor: '#FF231F7C',
-    //   });
-    // }
-  
-    //return token;
-  }
- 
   return (
     <View style={[globalStyles.container, styles.container]}>
       <View style={styles.titleContainer}>
@@ -301,19 +224,18 @@ const AdminOrders = () => {
           <Text style={styles2.btnContent}>Marbel Girls</Text>
         </Pressable>
       </View>
-      <View style={styles2.notificationBtn}>
+      <TouchableOpacity style={styles2.notificationBtn}>
         <Text style={styles2.notificationcontent}>Send Notification</Text>
-      </View>
+      </TouchableOpacity>
       <View style={styles2.searchItems}>
-        <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val)=>setSearch(val)}/>
-        <Pressable onPress={()=>onSearchPress(search)} style={styles2.searchBtn}>
+        <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val) => setSearch(val)} />
+        <Pressable onPress={() => onSearchPress(search)} style={styles2.searchBtn}>
           <Text style={styles2.searchBtnContent}>Search</Text>
         </Pressable>
       </View>
       <View style={styles.itemListContainer}>
         <FlatList
-          data={searchFirst?searchResults:(boysHostel?boysHostelList:(sarasaviGirls?sarasaviGirlsList:(newSarasavi?newSarasaviList:(nilaweli?nilaweliList:marbelList))))}
-          
+          data={searchFirst ? searchResults : boysHostel ? boysHostelList : sarasaviGirls ? sarasaviGirlsList : newSarasavi ? newSarasaviList : nilaweli ? nilaweliList : marbelList}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <View style={styles.itemTitle}>
@@ -326,15 +248,14 @@ const AdminOrders = () => {
                 <Text style={styles.quantity}>Order Id: {item.orderId}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
-              <Text style={styles.quantity}>Tp:{item.phoneNumber}</Text>
+                <Text style={styles.quantity}>Tp:{item.phoneNumber}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
                 <Text style={styles.quantity}>Qty:{item.quantity}</Text>
-                
+
                 <Text style={styles.price}>Rs. {item.total}/-</Text>
-                
               </View>
-              
+
               <View style={styles.addressContainer}>
                 <View style={styles.address}>
                   <Text style={styles.addressContent}>Hostel: {item.hostel}</Text>
