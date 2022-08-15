@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput } from "
 import React, { useEffect, useRef, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
-import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc,updateDoc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 import * as Device from 'expo-device';
 import * as Permissions from 'expo-permissions';
@@ -53,7 +53,7 @@ const AdminOrders = () => {
         if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
-            if (sarasaviGirlsList[i].orderId == doc.data().orderId) {
+            if (sarasaviGirlsList[i].notificationId == doc.data().notificationId) {
               t = false;
               break;
             }
@@ -119,6 +119,7 @@ const AdminOrders = () => {
     try {
       let arrayList=new Array();
       arrayList=boysHostel?boysHostelList:(marbel?marbelList:(nilaweli?nilaweliList:(newSarasavi?newSarasaviList:sarasaviGirlsList)));
+      console.log(arrayList);
       for(let i=0;i<arrayList.length;i++){
         const ref = doc(collection(db,"notifications"));
         const docRef = await addDoc(collection(db, "notifications"), {
@@ -126,7 +127,8 @@ const AdminOrders = () => {
           userName:arrayList[i].userName,
           price:arrayList[i].total,
           itemName:arrayList[i].itemName,
-          notificationId:ref.id
+          notificationId:ref.id,
+          quantity:arrayList[i].quantity
         });
         console.log("Notification Added: ", docRef.id)
       }
@@ -139,8 +141,18 @@ const AdminOrders = () => {
     }
   };
 
-  const onDelivered=async()=>{
-
+  const onDelivered=async(item)=>{
+    let id;
+    const q = query(collection(db, "orders"),where('orderId','==',item.orderId));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((d) => {
+        console.log(d.id);
+        const frankDocRef = doc(db, "orders", d.id);
+        const update= updateDoc(frankDocRef, {
+          "status": "Delivered"
+        });
+    })})
+    
   }
 
   const OnBtnClick = (btn) => {
@@ -301,7 +313,7 @@ const AdminOrders = () => {
                 </View>
               </View>
               <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={onDelivered} style={styles.btn}>
+                <TouchableOpacity onPress={()=>onDelivered(item)} style={styles.btn}>
                   <Text style={styles.btnText}>Mark As Delivered</Text>
                 </TouchableOpacity>
               </View>

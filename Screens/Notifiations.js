@@ -1,10 +1,13 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
+import { db } from "../Firebase/firebase";
 
 //global styling
 import globalStyles from "../Globals/globalStyles";
 
 const Notifiations = () => {
+  const [notificationList, setNotificationList] = useState([]);
   const dataList = [
     { itemName: "Fried Rice", quantity: "4", totalPrice: "800" },
     { itemName: "Fried Rice", quantity: "4", totalPrice: "800" },
@@ -17,11 +20,29 @@ const Notifiations = () => {
     { itemName: "Fried Rice", quantity: "4", totalPrice: "800" },
   ];
 
+  useEffect(()=>{
+    const q = query(collection(db, "notifications"),where('userName','==',global.userName));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        var t = true;
+          for (let i = 0; i < notificationList.length; i++) {
+            if (notificationList[i].notificationId == doc.data().notificationId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setNotificationList((prev) => [...prev, doc.data()]);
+          }
+      });
+    });
+  },[])
+
   return (
     <View style={[globalStyles.container, styles.container]}>
       <View style={styles.listContainer}>
         <FlatList
-          data={dataList}
+          data={notificationList}
           renderItem={({ item }) => (
             <View style={styles.item}>
               <View style={styles.itemTitle}>
@@ -33,7 +54,7 @@ const Notifiations = () => {
               </View>
               <View style={styles.priceContainer}>
                 <Text style={styles.price}>
-                  <Text style={styles.span}>Your Total Pay: </Text> Rs. {item.totalPrice}/-
+                  <Text style={styles.span}>Your Total Pay: </Text> Rs. {item.price}/-
                 </Text>
               </View>
             </View>
