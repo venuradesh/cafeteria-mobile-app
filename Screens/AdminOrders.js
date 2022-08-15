@@ -40,7 +40,6 @@ const AdminOrders = () => {
   ];
 
   useEffect(() => {
-    console.log(".............................")
     var t = false;
     var sarasaviGirlsListSize = sarasaviGirlsList.length;
     var newSarasaviListSize = newSarasaviList.length;
@@ -51,8 +50,6 @@ const AdminOrders = () => {
     const q = query(collection(db, "orders"),where("status","==","Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-
-        console.log(doc.data().hostel=="Nilaweli Boys");
         if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
@@ -64,7 +61,7 @@ const AdminOrders = () => {
           if (t) {
             setSarasaviGirlsList((prev) => [...prev, doc.data()]);
           }
-          console.log(doc.data().orderId);
+
         }
         else if(doc.data().hostel=="New Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
@@ -79,7 +76,6 @@ const AdminOrders = () => {
           }
         }
         else if(doc.data().hostel=="Nilaweli Boys" && doc.data().venue==global.canteen){
-          console.log("fuck");
           var t = true;
           for (let i = 0; i < nilaweliListSize; i++) {
             if (nilaweliList[i].orderId == doc.data().orderId) {
@@ -119,9 +115,33 @@ const AdminOrders = () => {
     });
   }, []);
 
-  const onDelivered = () => {
+  const onNotification = async() => {
+    try {
+      let arrayList=new Array();
+      arrayList=boysHostel?boysHostelList:(marbel?marbelList:(nilaweli?nilaweliList:(newSarasavi?newSarasaviList:sarasaviGirlsList)));
+      for(let i=0;i<arrayList.length;i++){
+        const ref = doc(collection(db,"notifications"));
+        const docRef = await addDoc(collection(db, "notifications"), {
+          userId:arrayList[i].userid,
+          userName:arrayList[i].userName,
+          price:arrayList[i].total,
+          itemName:arrayList[i].itemName,
+          notificationId:ref.id
+        });
+        console.log("Notification Added: ", docRef.id)
+      }
+      
     
+    
+    
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
+
+  const onDelivered=async()=>{
+
+  }
 
   const OnBtnClick = (btn) => {
     switch (btn) {
@@ -192,7 +212,6 @@ const AdminOrders = () => {
       for(let i=0;i<nilaweliList.length;i++){
         if(nilaweliList[i].userName==ss && nilaweliList[i].venue==global.canteen){
           setSearchResults([nilaweliList[i]]);
-          console.log(global.searchList);
           break;
         }
       }
@@ -217,67 +236,6 @@ const AdminOrders = () => {
 
   };
 
-  const sendPushNotification=async(expoPushToken) =>{
-    // const message = {
-    //   to: expoPushToken,
-    //   sound: 'default',
-    //   title: 'Original Title',
-    //   body: 'And here is the body!',
-    //   data: { someData: 'goes here' },
-    // };
-  
-    // await fetch('https://exp.host/--/api/v2/push/send', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Accept-encoding': 'gzip, deflate',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(message),
-    // });
-  }
-  
-  const registerForPushNotificationsAsync=async()=> {
-    let token;
-    const {status}=await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    if(status!='granted'){
-      const {status}=await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    }
-    if(status!='granted'){
-      alert('Fail to get the push token');
-      return;
-    }
-    token = (await Notifications.getDevicePushTokenAsync());
-    return token;
-    // let token;
-    // if (Device.isDevice) {
-    //   const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    //   let finalStatus = existingStatus;
-    //   if (existingStatus !== 'granted') {
-    //     const { status } = await Notifications.requestPermissionsAsync();
-    //     finalStatus = status;
-    //   }
-    //   if (finalStatus !== 'granted') {
-    //     alert('Failed to get push token for push notification!');
-    //     return;
-    //   }
-    //   token = (await Notifications.getExpoPushTokenAsync()).data;
-    //   console.log(token);
-    // } else {
-    //   alert('Must use physical device for Push Notifications');
-    // }
-  
-    // if (Platform.OS === 'android') {
-    //   Notifications.setNotificationChannelAsync('default', {
-    //     name: 'default',
-    //     importance: Notifications.AndroidImportance.MAX,
-    //     vibrationPattern: [0, 250, 250, 250],
-    //     lightColor: '#FF231F7C',
-    //   });
-    // }
-  
-    //return token;
-  }
  
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -302,7 +260,9 @@ const AdminOrders = () => {
         </Pressable>
       </View>
       <View style={styles2.notificationBtn}>
+      <Pressable onPress={onNotification}>
         <Text style={styles2.notificationcontent}>Send Notification</Text>
+        </Pressable>
       </View>
       <View style={styles2.searchItems}>
         <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val)=>setSearch(val)}/>
