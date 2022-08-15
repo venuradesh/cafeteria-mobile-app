@@ -12,6 +12,8 @@ const MyOrders = () => {
   const userid = route.params.params.params.userid;
   console.log(userid);
 
+  const [si,setSi]=useState(0);
+
   useEffect(() => {
     var t = false;
     var size = arrayList.length;
@@ -26,6 +28,9 @@ const MyOrders = () => {
           }
         }
         if (t) {
+          if(doc.data().status=="Pending"){
+            setSi(si+1);
+          }
           setArrayList((prev) => [...prev, doc.data()]);
         }
       });
@@ -36,7 +41,7 @@ const MyOrders = () => {
     <View style={[globalStyles.container, styles.container]}>
       <View style={styles.boxWrapper}>
         <View style={[styles.pendingCount, styles.boxContainer]}>
-          <Text style={[styles.pendingCountContent, styles.boxContent]}>Pending Orders: {arrayList.length}</Text>
+          <Text style={[styles.pendingCountContent, styles.boxContent]}>Pending Orders: {si}</Text>
         </View>
       </View>
       <Text style={styles.pendings}>Pendings</Text>

@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput } from "
 import React, { useEffect, useRef, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
-import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, where, doc,updateDoc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 import * as Device from "expo-device";
 import * as Permissions from "expo-permissions";
@@ -38,7 +38,6 @@ const AdminOrders = () => {
   ];
 
   useEffect(() => {
-    console.log(".............................");
     var t = false;
     var sarasaviGirlsListSize = sarasaviGirlsList.length;
     var newSarasaviListSize = newSarasaviList.length;
@@ -51,9 +50,10 @@ const AdminOrders = () => {
       querySnapshot.forEach((doc) => {
         console.log(doc.data().hostel == "Nilaweli Boys");
         if (doc.data().hostel == "Sarasavi Girls" && doc.data().venue == global.canteen) {
+        if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
-            if (sarasaviGirlsList[i].orderId == doc.data().orderId) {
+            if (sarasaviGirlsList[i].notificationId == doc.data().notificationId) {
               t = false;
               break;
             }
@@ -61,8 +61,8 @@ const AdminOrders = () => {
           if (t) {
             setSarasaviGirlsList((prev) => [...prev, doc.data()]);
           }
-          console.log(doc.data().orderId);
-        } else if (doc.data().hostel == "New Sarasavi Girls" && doc.data().venue == global.canteen) {
+        }
+        else if(doc.data().hostel=="New Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < newSarasaviListSize; i++) {
             if (newSarasaviList[i].orderId == doc.data().orderId) {
@@ -73,8 +73,8 @@ const AdminOrders = () => {
           if (t) {
             setNewSarasaviList((prev) => [...prev, doc.data()]);
           }
-        } else if (doc.data().hostel == "Nilaweli Boys" && doc.data().venue == global.canteen) {
-          console.log("fuck");
+        }
+        else if(doc.data().hostel=="Nilaweli Boys" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < nilaweliListSize; i++) {
             if (nilaweliList[i].orderId == doc.data().orderId) {
@@ -112,7 +112,45 @@ const AdminOrders = () => {
     });
   }, []);
 
-  const onDelivered = () => {};
+  const onNotification = async() => {
+    try {
+      let arrayList=new Array();
+      arrayList=boysHostel?boysHostelList:(marbel?marbelList:(nilaweli?nilaweliList:(newSarasavi?newSarasaviList:sarasaviGirlsList)));
+      console.log(arrayList);
+      for(let i=0;i<arrayList.length;i++){
+        const ref = doc(collection(db,"notifications"));
+        const docRef = await addDoc(collection(db, "notifications"), {
+          userId:arrayList[i].userid,
+          userName:arrayList[i].userName,
+          price:arrayList[i].total,
+          itemName:arrayList[i].itemName,
+          notificationId:ref.id,
+          quantity:arrayList[i].quantity
+        });
+        console.log("Notification Added: ", docRef.id)
+      }
+      
+    
+    
+    
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  const onDelivered=async(item)=>{
+    let id;
+    const q = query(collection(db, "orders"),where('orderId','==',item.orderId));
+    const user = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((d) => {
+        console.log(d.id);
+        const frankDocRef = doc(db, "orders", d.id);
+        const update= updateDoc(frankDocRef, {
+          "status": "Delivered"
+        });
+    })})
+    
+  }
 
   const OnBtnClick = (btn) => {
     switch (btn) {
@@ -181,7 +219,6 @@ const AdminOrders = () => {
       for (let i = 0; i < nilaweliList.length; i++) {
         if (nilaweliList[i].userName == ss && nilaweliList[i].venue == global.canteen) {
           setSearchResults([nilaweliList[i]]);
-          console.log(global.searchList);
           break;
         }
       }
@@ -224,6 +261,7 @@ const AdminOrders = () => {
           <Text style={styles2.btnContent}>Marbel Girls</Text>
         </Pressable>
       </View>
+
       <TouchableOpacity style={styles2.notificationBtn}>
         <Text style={styles2.notificationcontent}>Send Notification</Text>
       </TouchableOpacity>
@@ -262,7 +300,7 @@ const AdminOrders = () => {
                 </View>
               </View>
               <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={onDelivered} style={styles.btn}>
+                <TouchableOpacity onPress={()=>onDelivered(item)} style={styles.btn}>
                   <Text style={styles.btnText}>Mark As Delivered</Text>
                 </TouchableOpacity>
               </View>
