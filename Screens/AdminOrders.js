@@ -32,13 +32,6 @@ const AdminOrders = () => {
   
   const [searchResults, setSearchResults] = useState([]);
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
 
   const dataList = [
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
@@ -127,9 +120,6 @@ const AdminOrders = () => {
   }, []);
 
   const onDelivered = () => {
-    registerForPushNotificationsAsync().then(token => console.log(token)).catch(err=>console.log(err));
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
     
   };
 

@@ -18,7 +18,7 @@ const Home = () => {
   const [min, setMin] = useState(59);
   const [sec, setSec] = useState(1);
 
-  const mealTimeList = ["breakfirst", "dinner", "lunch"];
+  const mealTimeList = ["breakfast", "dinner", "lunch"];
   console.log(sec);
   const updateMin = (min) => {
     if (min == 0) {

@@ -22,6 +22,7 @@ const LoginPage = () => {
   const checkLogin = async () => {
     try {
       var t = false;
+      global.mealTime="breakfirst";
       const querySnapshot1 = await getDocs(collection(db, "clients"));
       querySnapshot1.forEach((doc) => {
         if (doc.data().userName == userName && doc.data().password == password) {

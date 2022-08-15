@@ -37,7 +37,7 @@ const AddItems = () => {
     var mealsTime = "";
 
     if (breakfast) {
-      mealsTime = "brekfast";
+      mealsTime = "breakfast";
     } else if (lunch) {
       mealsTime = "lunch";
     } else {
@@ -157,7 +157,7 @@ const AddItems = () => {
         <Pressable style={[styles.btn, styles.btnSubmit]} onPress={addItem}>
           <Text style={styles.btnContent}>Submit</Text>
         </Pressable>
-        <Pressable style={[styles.btn, styles.btnReset]}>
+        <Pressable style={[styles.btn, styles.btnReset]} onPress={clear}>
           <Text style={styles.btnContent}>Reset</Text>
         </Pressable>
       </View>

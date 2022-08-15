@@ -21,15 +21,18 @@ const FoodCategoryList = () => {
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         var t = true;
-        for (let i = 0; i < size; i++) {
-          if (arrayList[i].key == doc.data().key) {
-            t = false;
-            break;
+        if(doc.data().mealsTime==global.mealTime){
+          for (let i = 0; i < size; i++) {
+            if (arrayList[i].key == doc.data().key) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setArrayList((prev) => [...prev, doc.data()]);
           }
         }
-        if (t) {
-          setArrayList((prev) => [...prev, doc.data()]);
-        }
+        
       });
     });
   }, []);
