@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:334531816276:android:b7d52b37c4eba1e5e476c1",
+        "mobilesdk_app_id": "1:334531816276:android:065820db24daa64ee476c1",
         "android_client_info": {
-          "package_name": "cafeteria.app"
+          "package_name": "cafeteria.mobile.app"
         }
       },
       "oauth_client": [

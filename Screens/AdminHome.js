@@ -9,7 +9,9 @@ const AdminHome = () => {
   const [breakfast, setBreakFast] = useState(true);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
-  const [arrayList, setArrayList] = useState([]);
+  const [breakFirstList, setBreakFirstList] = useState([]);
+  const [lunchList, setLunchList] = useState([]);
+  const [dinnerList, setDinnerList] = useState([]);
 
   const onBreakFastClick = () => {
     setBreakFast(true);
@@ -30,20 +32,51 @@ const AdminHome = () => {
   useEffect(() => {
     
     var t = false;
-    var size = arrayList.length;
+    var breakFirstSize = breakFirstList.length;
+    var lunchSize = lunchList.length;
+    var dinnerSize = dinnerList.length;
     const q = query(collection(db, "orders"),where("status","==","Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        var t = true;
-        for (let i = 0; i < size; i++) {
-          if (arrayList[i].orderId == doc.data().orderId) {
-            t = false;
-            break;
+        if(doc.data().mealsTime=="breakfirst"){
+          var t = true;
+          for (let i = 0; i < breakFirstSize; i++) {
+            if (breakFirstList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setBreakFirstList((prev) => [...prev, doc.data()]);
+          }
+          console.log(doc.data().orderId);
+          console.log(breakFirstSize);
+        }
+        else if(doc.data().mealsTime=="lunch"){
+          var t = true;
+          for (let i = 0; i < lunchSize; i++) {
+            if (lunchList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setLunchList((prev) => [...prev, doc.data()]);
           }
         }
-        if (t) {
-          setArrayList((prev) => [...prev, doc.data()]);
+        else if(doc.data().mealsTime=="dinner"){
+          var t = true;
+          for (let i = 0; i < dinnerSize; i++) {
+            if (dinnerList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setDinnerList((prev) => [...prev, doc.data()]);
+          }
         }
+        
       });
     });
   }, []);
@@ -63,12 +96,16 @@ const AdminHome = () => {
           </Pressable>
         </View>
         <View style={[styles.boxContainer, styles.totalCount]}>
-          <Text style={[styles.boxContent, styles.totalCountContent]}>Total Orders: 20</Text>
+          <Text style={[styles.boxContent, styles.totalCountContent]}>Total Orders: {breakFirstList.length+lunchList.length+dinnerList.length}</Text>
         </View>
       </View>
       <View style={[styles.pendingCountContainer, styles.boxWrapper]}>
         <View style={[styles.pendingCount, styles.boxContainer]}>
-          <Text style={[styles.pendingCountContent, styles.boxContent]}>To be Delivered: {arrayList.length}</Text>
+          <Text style={[styles.pendingCountContent, styles.boxContent]}>To be Delivered: 
+          {
+            breakfast?breakFirstList.length:(lunch?lunchList.length:dinnerList.length)
+          }
+          </Text>
         </View>
       </View>
       <Pressable style={[styles.boxWrapper, styles.activeContainer]}>

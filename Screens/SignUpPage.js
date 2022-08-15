@@ -24,7 +24,7 @@ export default function () {
 
   const navigation=useNavigation();
 
-  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys ","Marbel Girls"];
+  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys","Marbel Girls"];
   const onCustomerClick = () => {
     setCatererClick(false);
     setCustomerClick(true);

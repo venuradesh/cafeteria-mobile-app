@@ -1,17 +1,44 @@
 import { Pressable, StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import globalStyles from "../Globals/globalStyles";
 import { FlatList } from "react-native-gesture-handler";
 import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
+import * as Device from 'expo-device';
+import * as Permissions from 'expo-permissions';
+import * as Notifications from 'expo-notifications';
 
 const AdminOrders = () => {
-  const [arrayList, setArrayList] = useState([]);
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   const [sarasaviGirls, setSarasaviGirls] = useState(false);
   const [newSarasavi, setNewSarasavi] = useState(false);
   const [nilaweli, setNilaweli] = useState(false);
   const [marbel, setMarbel] = useState(false);
   const [boysHostel, setBoysHostel] = useState(true);
+  const [searchFirst, setSearchFirst] = useState(false);
+
+  const [search, setSearch] = useState("");
+
+  const [sarasaviGirlsList, setSarasaviGirlsList] = useState([]);
+  const [newSarasaviList, setNewSarasaviList] = useState([]);
+  const [nilaweliList, setNilaweliList] = useState([]);
+  const [marbelList, setMarbelList] = useState([]);
+  const [boysHostelList, setBoysHostelList] = useState([]);
+
+  
+  const [searchResults, setSearchResults] = useState([]);
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
 
   const dataList = [
     { name: "Fried Rice", activeStatus: "pending", quantity: "2", totalPrice: "400", address: "Nilaweli Hostel" },
@@ -21,25 +48,86 @@ const AdminOrders = () => {
 
   useEffect(() => {
     var t = false;
-    var size = arrayList.length;
-    const q = query(collection(db, "orders"), where("status", "==", "Pending"));
+    var sarasaviGirlsListSize = sarasaviGirlsList.length;
+    var newSarasaviListSize = newSarasaviList.length;
+    var nilaweliListSize = nilaweliList.length;
+    var marbelListSize = marbelList.length;
+    var boysHostelListSize = marbelList.length;
+    
+    const q = query(collection(db, "orders"),where("status","==","Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        var t = true;
-        for (let i = 0; i < size; i++) {
-          if (arrayList[i].orderId == doc.data().orderId) {
-            t = false;
-            break;
+        if(doc.data().hostel=="Sarasavi Girls"){
+          var t = true;
+          for (let i = 0; i < sarasaviGirlsListSize; i++) {
+            if (sarasaviGirlsList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setSarasaviGirlsList((prev) => [...prev, doc.data()]);
+          }
+          console.log(doc.data().orderId);
+        }
+        else if(doc.data().hostel=="New Sarasavi Girls"){
+          var t = true;
+          for (let i = 0; i < newSarasaviListSize; i++) {
+            if (newSarasaviList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setNewSarasaviList((prev) => [...prev, doc.data()]);
           }
         }
-        if (t) {
-          setArrayList((prev) => [...prev, doc.data()]);
+        else if(doc.data().hostel=="Nilaweli Boys"){
+          var t = true;
+          for (let i = 0; i < nilaweliListSize; i++) {
+            if (nilaweliList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setNilaweliList((prev) => [...prev, doc.data()]);
+          }
+        }
+        else if(doc.data().hostel=="Marbel Girls"){
+          var t = true;
+          for (let i = 0; i < marbelListSize; i++) {
+            if (marbelList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setMarbelList((prev) => [...prev, doc.data()]);
+          }
+        }
+        else if(doc.data().hostel=="Boys Hostel"){
+          var t = true;
+          for (let i = 0; i < boysHostelListSize; i++) {
+            if (boysHostelList[i].orderId == doc.data().orderId) {
+              t = false;
+              break;
+            }
+          }
+          if (t) {
+            setBoysHostelList((prev) => [...prev, doc.data()]);
+          }
         }
       });
     });
   }, []);
 
-  const onDelivered = () => {};
+  const onDelivered = () => {
+    registerForPushNotificationsAsync().then(token => console.log(token)).catch(err=>console.log(err));
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    
+  };
 
   const OnBtnClick = (btn) => {
     switch (btn) {
@@ -49,6 +137,7 @@ const AdminOrders = () => {
         setMarbel(false);
         setNilaweli(false);
         setNewSarasavi(false);
+        setSearchFirst(false);
         break;
       case "sarasavi":
         setSarasaviGirls(true);
@@ -56,6 +145,7 @@ const AdminOrders = () => {
         setMarbel(false);
         setNilaweli(false);
         setNewSarasavi(false);
+        setSearchFirst(false);
         break;
       case "newSarasavi":
         setNewSarasavi(true);
@@ -63,6 +153,7 @@ const AdminOrders = () => {
         setBoysHostel(false);
         setMarbel(false);
         setNilaweli(false);
+        setSearchFirst(false);
         break;
       case "marbel":
         setMarbel(true);
@@ -70,6 +161,7 @@ const AdminOrders = () => {
         setNewSarasavi(false);
         setBoysHostel(false);
         setNilaweli(false);
+        setSearchFirst(false);
         break;
       case "nilaweli":
         setNilaweli(true);
@@ -77,12 +169,122 @@ const AdminOrders = () => {
         setNewSarasavi(false);
         setBoysHostel(false);
         setMarbel(false);
+        setSearchFirst(false);
         break;
     }
   };
 
-  const onSearchPress = () => {};
+  const onSearchPress = (ss) => {
+    setSearchResults([]);
+    setSearchFirst(true);
+    if(boysHostel){
+      //setSearchResults([...boysHostelList])
+      for(let i=0;i<boysHostelList.length;i++){
+        if(boysHostelList[i].userName==ss){
+          setSearchResults([boysHostelList[i]]);
+          break;
+        }
+      }
+    }
+    else if(sarasaviGirls){
+      for(let i=0;i<sarasaviGirlsList.length;i++){
+        if(sarasaviGirlsList[i].userName==ss){
+          setSearchResults([sarasaviGirlsList[i]]);
+          break;
+        }
+      }
+    }
+    else if(nilaweli){
+      for(let i=0;i<nilaweliList.length;i++){
+        if(nilaweliList[i].userName==ss){
+          setSearchResults([nilaweliList[i]]);
+          console.log(global.searchList);
+          break;
+        }
+      }
 
+    }
+    else if(marbel){
+      for(let i=0;i<marbelList.length;i++){
+        if(marbelList[i].userName==ss){
+          setSearchResults([marbelList[i]]);
+          break;
+        }
+      }
+    }
+    else if(newSarasavi){
+      for(let i=0;i<newSarasaviList.length;i++){
+        if(newSarasaviList[i].userName==ss){
+          setSearchResults([newSarasaviList[i]]);
+          break;
+        }
+      }
+    }
+
+  };
+
+  const sendPushNotification=async(expoPushToken) =>{
+    // const message = {
+    //   to: expoPushToken,
+    //   sound: 'default',
+    //   title: 'Original Title',
+    //   body: 'And here is the body!',
+    //   data: { someData: 'goes here' },
+    // };
+  
+    // await fetch('https://exp.host/--/api/v2/push/send', {
+    //   method: 'POST',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Accept-encoding': 'gzip, deflate',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(message),
+    // });
+  }
+  
+  const registerForPushNotificationsAsync=async()=> {
+    let token;
+    const {status}=await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if(status!='granted'){
+      const {status}=await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    }
+    if(status!='granted'){
+      alert('Fail to get the push token');
+      return;
+    }
+    token = (await Notifications.getDevicePushTokenAsync());
+    return token;
+    // let token;
+    // if (Device.isDevice) {
+    //   const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    //   let finalStatus = existingStatus;
+    //   if (existingStatus !== 'granted') {
+    //     const { status } = await Notifications.requestPermissionsAsync();
+    //     finalStatus = status;
+    //   }
+    //   if (finalStatus !== 'granted') {
+    //     alert('Failed to get push token for push notification!');
+    //     return;
+    //   }
+    //   token = (await Notifications.getExpoPushTokenAsync()).data;
+    //   console.log(token);
+    // } else {
+    //   alert('Must use physical device for Push Notifications');
+    // }
+  
+    // if (Platform.OS === 'android') {
+    //   Notifications.setNotificationChannelAsync('default', {
+    //     name: 'default',
+    //     importance: Notifications.AndroidImportance.MAX,
+    //     vibrationPattern: [0, 250, 250, 250],
+    //     lightColor: '#FF231F7C',
+    //   });
+    // }
+  
+    //return token;
+  }
+ 
   return (
     <View style={[globalStyles.container, styles.container]}>
       <View style={styles.titleContainer}>
@@ -109,14 +311,15 @@ const AdminOrders = () => {
         <Text style={styles2.notificationcontent}>Send Notification</Text>
       </View>
       <View style={styles2.searchItems}>
-        <TextInput placeholder="Search Order" style={styles2.search} />
-        <Pressable onPress={onSearchPress} style={styles2.searchBtn}>
+        <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val)=>setSearch(val)}/>
+        <Pressable onPress={()=>onSearchPress(search)} style={styles2.searchBtn}>
           <Text style={styles2.searchBtnContent}>Search</Text>
         </Pressable>
       </View>
       <View style={styles.itemListContainer}>
         <FlatList
-          data={arrayList}
+          data={searchFirst?searchResults:(boysHostel?boysHostelList:(sarasaviGirls?sarasaviGirlsList:(newSarasavi?newSarasaviList:(nilaweli?nilaweliList:marbelList))))}
+          
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <View style={styles.itemTitle}>
