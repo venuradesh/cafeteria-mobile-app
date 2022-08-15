@@ -16,34 +16,28 @@ const Home = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [min, setMin] = useState(59);
-  const [sec, setSec] = useState(1);
+  const [sec, setSec] = useState(59);
 
   const mealTimeList = ["breakfast", "dinner", "lunch"];
-  console.log(sec);
-  const updateMin = (min) => {
-    if (min == 0) {
-      setMin(59);
-      console.log(min);
-      updateMin(min);
-    }
-    if (sec == 60) {
-      setMin(min - 1);
-      console.log(min);
-      updateMin(min);
-    }
-  };
-  const updateSec = (sec) => {
-    if (sec == 60) {
-      setSec(0);
-      console.log(sec);
-      updateSec(sec);
-    }
-    if (sec >= 0) {
-      setSec(sec + 1);
-      console.log(sec);
-      updateSec(sec);
-    }
-  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSec(sec - 1);
+
+      if (sec === 1) {
+        setMin(min - 1);
+        setSec(59);
+      }
+
+      if (min === 0 && sec === 1) {
+        clearTimeout();
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  });
 
   const categoryData = [
     {
