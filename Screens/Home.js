@@ -113,14 +113,6 @@ const Home = () => {
 
   return (
     <ScrollView style={[globalStyles.container, styles.container]}>
-      <View style={styles.btnContainer}>
-        <Pressable onPress={onDelivery} style={deliveryClick ? [styles.btnClicked, styles.btn] : [styles.btn, styles.delivery]}>
-          <Text style={styles.btnText}>Delivery</Text>
-        </Pressable>
-        <Pressable onPress={onPickup} style={pickupClick ? [styles.btnClicked, styles.btn] : [styles.btn, styles.pickup]}>
-          <Text style={styles.btnText}>Pick up</Text>
-        </Pressable>
-      </View>
       <View style={styles.locationContainer}>
         <Pressable style={styles.location} onPress={onLocation}>
           <View style={styles.locationContent}>
@@ -143,7 +135,7 @@ const Home = () => {
                   backgroundColor: "white",
                   position: "relative",
                   right: 90,
-                  bottom: 2,
+                  bottom: 10,
                 }}
                 buttonTextStyle={{
                   width: "100%",
@@ -225,7 +217,9 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingVertical: 30,
+  },
 
   btnContainer: {
     flexDirection: "row",
