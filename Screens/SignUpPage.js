@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
-import { collection, addDoc, getDocs, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, addDoc , getDocs, onSnapshot , query, where , doc } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 import SelectDropdown from "react-native-select-dropdown";
 
@@ -20,11 +20,11 @@ export default function () {
   const [customerClick, setCustomerClick] = useState(true);
   const [catererClick, setCatererClick] = useState(false);
   const [userNametaken, setUserNametaken] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState('');
 
-  const navigation = useNavigation();
+  const navigation=useNavigation();
 
-  const venueList = ["Boys Hostel", "Sarasavi Girls", "New Sarasavi Girls", "Nilaweli Boys", "Marbel Girls"];
+  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys","Marbel Girls"];
   const onCustomerClick = () => {
     setCatererClick(false);
     setCustomerClick(true);
@@ -37,21 +37,21 @@ export default function () {
 
   const addClientData = async () => {
     try {
-      if (!userNametaken) {
-        const ref = doc(collection(db, "clients"));
+      if(!userNametaken){
+        const ref = doc(collection(db,"clients"));
         const docRef = await addDoc(collection(db, "clients"), {
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber,
           password: password,
           userName: userName,
-          hostel: hostel,
-          userId: ref.id,
+          hostel:hostel,
+          userId:ref.id
         });
-
-        console.log("Document written with ID: ", docRef.id);
-        navigation.navigate("login");
-      }
+      
+      console.log("Document written with ID: ", docRef.id);
+      navigation.navigate("login");
+    }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -59,56 +59,56 @@ export default function () {
 
   const addCaterdata = async () => {
     try {
-      const ref = doc(collection(db, "caterers"));
-      if (!userNametaken) {
-        const docRef = addDoc(collection(db, "caterers"), {
-          firstName: firstName,
-          lastName: lastName,
-          phoneNumber: phoneNumber,
-          password: password,
-          userName: userName,
-          cateringServiceName: cateringServiceName,
-          venue: venue,
-          userId: ref.id,
-        });
-        navigation.navigate("login");
-        //console.log("Document written with ID: ", docRef.id);
-        //navigation.navigate("login");
-      }
+      const ref = doc(collection(db,"caterers"));
+      if(!userNametaken){
+      const docRef = addDoc(collection(db, "caterers"), {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        password: password,
+        userName: userName,
+        cateringServiceName: cateringServiceName,
+        venue: venue,
+        userId:ref.id
+      });
+      navigation.navigate('login');
+      //console.log("Document written with ID: ", docRef.id);
+      //navigation.navigate("login");
+    }
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
-  useEffect(() => {
-    var t = false;
-    const q = query(collection(db, "clients"), where("userName", "==", userName));
+  useEffect(()=>{
+    var t=false;
+    const q = query(collection(db, "clients"),where('userName','==',userName));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        t = true;
+        t=true;
         setUserNametaken(true);
       });
     });
-    const qq = query(collection(db, "caterers"), where("userName", "==", userName));
+    const qq = query(collection(db, "caterers"),where('userName','==',userName));
     const cater = onSnapshot(qq, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        t = true;
+        t=true;
         setUserNametaken(true);
       });
     });
-    if (!t) {
+    if(!t){
       setUserNametaken(false);
     }
   }, [userName]);
 
-  const btnReset = () => {
-    setUserName("");
-    setPassword("");
-    setVenue("");
-    setCateringServiceName("");
-    setFirstName("");
-    setLastName("");
-    setPhoneNumber("");
-  };
+  const btnReset= () =>{
+    setUserName('');
+    setPassword('');
+    setVenue('');
+    setCateringServiceName('');
+    setFirstName('');
+    setLastName('');
+    setPhoneNumber('');
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -128,13 +128,7 @@ export default function () {
             <View style={styles.inputItems}>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>User Name</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(val) => {
-                    setUserName(val);
-                  }}
-                  value={userName}
-                />
+                <TextInput style={styles.input} onChangeText={(val) => {setUserName(val)}} value={userName}/>
               </View>
               {userNametaken ? (
                 <View style={styles.errorContainer}>
@@ -145,19 +139,19 @@ export default function () {
               )}
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>First Name</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} value={firstName} />
+                <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} value={firstName}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Last Name</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setLastName(val)} value={lastName} />
+                <TextInput style={styles.input} onChangeText={(val) => setLastName(val)} value={lastName}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Phone Number</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setPhoneNumber(val)} value={phoneNumber} />
+                <TextInput style={styles.input} onChangeText={(val) => setPhoneNumber(val)} value={phoneNumber}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Password</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password} />
+                <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password}/>
               </View>
 
               <View style={styles.dropdown}>
@@ -189,18 +183,21 @@ export default function () {
               <Pressable style={[styles.btnFacebook, styles.btnSubmit]} onPress={addClientData}>
                 <Text style={styles.textBtn}>Submit</Text>
               </Pressable>
+              <View style={styles.item}>
+                <Text style={styles.orelse}>Or</Text>
+              </View>
+              <Pressable style={[styles.btnFacebook]}>
+                <Text style={styles.textBtn}>Sign Up with Facebook</Text>
+              </Pressable>
+              <Pressable style={[styles.btnFacebook, styles.btnGoogle]}>
+                <Text style={styles.textBtn}>Sign Up with Google</Text>
+              </Pressable>
             </View>
           ) : (
             <View style={styles.inputItems}>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>User Name</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(val) => {
-                    setUserName(val);
-                  }}
-                  value={userName}
-                />
+                <TextInput style={styles.input} onChangeText={(val) => {setUserName(val)} } value={userName}/>
               </View>
               {userNametaken ? (
                 <View style={styles.errorContainer}>
@@ -211,28 +208,29 @@ export default function () {
               )}
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>First Name</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} value={firstName} />
+                <TextInput style={styles.input} onChangeText={(val) => setFirstName(val)} value={firstName}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Last Name</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setLastName(val)} value={lastName} />
+                <TextInput style={styles.input} onChangeText={(val) => setLastName(val)} value={lastName}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Phone Number</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setPhoneNumber(val)} value={phoneNumber} />
+                <TextInput style={styles.input} onChangeText={(val) => setPhoneNumber(val)} value={phoneNumber}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Catering Service Name</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setCateringServiceName(val)} value={cateringServiceName} />
+                <TextInput style={styles.input} onChangeText={(val) => setCateringServiceName(val)} value={cateringServiceName}/>
               </View>
-
+              
+              
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Venue</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setVenue(val)} value={venue} />
+                <TextInput style={styles.input} onChangeText={(val) => setVenue(val)} value={venue}/>
               </View>
               <View style={styles.item}>
                 <Text style={styles.inputTextContent}>Password</Text>
-                <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password} />
+                <TextInput style={styles.input} onChangeText={(val) => setPassword(val)} value={password}/>
               </View>
               <Pressable style={[styles.btnFacebook, styles.btnSubmit]} onPress={addCaterdata}>
                 <Text style={styles.textBtn}>Submit</Text>
