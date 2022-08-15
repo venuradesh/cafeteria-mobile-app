@@ -13,7 +13,7 @@ const ItemDes = () => {
   const [err, setError] = useState(false);
   const navigation=useNavigation();
   const route=useRoute();
-  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys ","Marbel Girls"];
+  const venueList=["Boys Hostel","Sarasavi Girls","New Sarasavi Girls","Nilaweli Boys","Marbel Girls"];
   const mealsTime=global.mealTime;
   const orderNow =async () => {
     try{
@@ -30,7 +30,9 @@ const ItemDes = () => {
         total:quantity*route.params.itemDetails.price,
         userid:userid,
         userName:global.userName,
-        mealsTime:mealsTime
+        mealsTime:mealsTime,
+        venue:route.params.itemDetails.venue,
+        phoneNumber:global.phone
       });
       navigation.navigate("MyOrders", { userid });
     }

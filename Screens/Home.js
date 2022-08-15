@@ -160,7 +160,6 @@ const Home = () => {
                 defaultButtonText="Time"
               />
             </View>
-            <Text style={styles.timeText}>{global.mealTime}</Text>
           </Pressable>
         </Pressable>
         <Entypo name="sound-mix" size={24} color="#595959" />

@@ -68,10 +68,17 @@ const AddItems = () => {
     });
 
     console.log("Document written with ID: ", docRef.id);
+    clear();
   };
+
+  const clear=()=>{
+    setFoodItemName("");
+    setPrice("");
+  }
 
   const ItemList = ["Fried Rice", "Rice and Curry", "Short Eats", "Juice"];
   const venueList = [global.canteen];
+
 
   return (
     <View style={[globalStyles.container, styles.container]}>
@@ -89,11 +96,11 @@ const AddItems = () => {
       <View style={styles.inputItemsContainer}>
         <View style={styles.inputItem}>
           <Text style={styles.inputTextContent}>Food Item Name</Text>
-          <TextInput style={styles.input} onChangeText={(val) => setFoodItemName(val)} />
+          <TextInput style={styles.input} onChangeText={(val) => setFoodItemName(val)} value={foodItemName}/>
         </View>
         <View style={styles.inputItem}>
           <Text style={styles.inputTextContent}>Price (Rs.)</Text>
-          <TextInput style={styles.input} onChangeText={(val) => setPrice(val)} />
+          <TextInput style={styles.input} onChangeText={(val) => setPrice(val)} value={price}/>
         </View>
       </View>
       <View style={styles.dropdown}>

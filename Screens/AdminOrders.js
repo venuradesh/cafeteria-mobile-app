@@ -47,6 +47,7 @@ const AdminOrders = () => {
   ];
 
   useEffect(() => {
+    console.log(".............................")
     var t = false;
     var sarasaviGirlsListSize = sarasaviGirlsList.length;
     var newSarasaviListSize = newSarasaviList.length;
@@ -57,7 +58,9 @@ const AdminOrders = () => {
     const q = query(collection(db, "orders"),where("status","==","Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        if(doc.data().hostel=="Sarasavi Girls"){
+
+        console.log(doc.data().hostel=="Nilaweli Boys");
+        if(doc.data().hostel=="Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < sarasaviGirlsListSize; i++) {
             if (sarasaviGirlsList[i].orderId == doc.data().orderId) {
@@ -70,7 +73,7 @@ const AdminOrders = () => {
           }
           console.log(doc.data().orderId);
         }
-        else if(doc.data().hostel=="New Sarasavi Girls"){
+        else if(doc.data().hostel=="New Sarasavi Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < newSarasaviListSize; i++) {
             if (newSarasaviList[i].orderId == doc.data().orderId) {
@@ -82,7 +85,8 @@ const AdminOrders = () => {
             setNewSarasaviList((prev) => [...prev, doc.data()]);
           }
         }
-        else if(doc.data().hostel=="Nilaweli Boys"){
+        else if(doc.data().hostel=="Nilaweli Boys" && doc.data().venue==global.canteen){
+          console.log("fuck");
           var t = true;
           for (let i = 0; i < nilaweliListSize; i++) {
             if (nilaweliList[i].orderId == doc.data().orderId) {
@@ -94,7 +98,7 @@ const AdminOrders = () => {
             setNilaweliList((prev) => [...prev, doc.data()]);
           }
         }
-        else if(doc.data().hostel=="Marbel Girls"){
+        else if(doc.data().hostel=="Marbel Girls" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < marbelListSize; i++) {
             if (marbelList[i].orderId == doc.data().orderId) {
@@ -106,7 +110,7 @@ const AdminOrders = () => {
             setMarbelList((prev) => [...prev, doc.data()]);
           }
         }
-        else if(doc.data().hostel=="Boys Hostel"){
+        else if(doc.data().hostel=="Boys Hostel" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < boysHostelListSize; i++) {
             if (boysHostelList[i].orderId == doc.data().orderId) {
@@ -180,7 +184,7 @@ const AdminOrders = () => {
     if(boysHostel){
       //setSearchResults([...boysHostelList])
       for(let i=0;i<boysHostelList.length;i++){
-        if(boysHostelList[i].userName==ss){
+        if(boysHostelList[i].userName==ss && boysHostelList[i].venue==global.canteen){
           setSearchResults([boysHostelList[i]]);
           break;
         }
@@ -188,7 +192,7 @@ const AdminOrders = () => {
     }
     else if(sarasaviGirls){
       for(let i=0;i<sarasaviGirlsList.length;i++){
-        if(sarasaviGirlsList[i].userName==ss){
+        if(sarasaviGirlsList[i].userName==ss && sarasaviGirlsList[i].venue==global.canteen){
           setSearchResults([sarasaviGirlsList[i]]);
           break;
         }
@@ -196,7 +200,7 @@ const AdminOrders = () => {
     }
     else if(nilaweli){
       for(let i=0;i<nilaweliList.length;i++){
-        if(nilaweliList[i].userName==ss){
+        if(nilaweliList[i].userName==ss && nilaweliList[i].venue==global.canteen){
           setSearchResults([nilaweliList[i]]);
           console.log(global.searchList);
           break;
@@ -206,7 +210,7 @@ const AdminOrders = () => {
     }
     else if(marbel){
       for(let i=0;i<marbelList.length;i++){
-        if(marbelList[i].userName==ss){
+        if(marbelList[i].userName==ss && marbelList[i].venue==global.canteen){
           setSearchResults([marbelList[i]]);
           break;
         }
@@ -214,7 +218,7 @@ const AdminOrders = () => {
     }
     else if(newSarasavi){
       for(let i=0;i<newSarasaviList.length;i++){
-        if(newSarasaviList[i].userName==ss){
+        if(newSarasaviList[i].userName==ss && newSarasaviList[i].venue==global.canteen){
           setSearchResults([newSarasaviList[i]]);
           break;
         }
@@ -332,9 +336,15 @@ const AdminOrders = () => {
                 <Text style={styles.quantity}>Order Id: {item.orderId}</Text>
               </View>
               <View style={styles.quantityPriceContainer}>
-                <Text style={styles.quantity}>Qty:{item.quantity}</Text>
-                <Text style={styles.price}>Rs. {item.total}/-</Text>
+              <Text style={styles.quantity}>Tp:{item.phoneNumber}</Text>
               </View>
+              <View style={styles.quantityPriceContainer}>
+                <Text style={styles.quantity}>Qty:{item.quantity}</Text>
+                
+                <Text style={styles.price}>Rs. {item.total}/-</Text>
+                
+              </View>
+              
               <View style={styles.addressContainer}>
                 <View style={styles.address}>
                   <Text style={styles.addressContent}>Hostel: {item.hostel}</Text>

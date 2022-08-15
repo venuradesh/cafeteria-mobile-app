@@ -31,6 +31,7 @@ const LoginPage = () => {
           global.id=userid;
           global.userName=userName;
           global.hostel=doc.data().hostel;
+          global.phone=doc.data().phoneNumber;
           resetBtn();
           setPasswordIncorrect(false);
           navigation.navigate("home", {userid:userid });

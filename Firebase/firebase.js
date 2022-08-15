@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
-    apiKey: "AIzaSyCdwX84mfOOtmYkjQPLePoLzDfhArY2YUI",
+    apiKey: "AIzaSyD2WA0DbmZDe6-i8RstD9YQcRh6xB-0Yb8",
 
     authDomain: "cafeteria-mobile-app.firebaseapp.com",
   

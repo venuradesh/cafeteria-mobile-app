@@ -50,7 +50,7 @@ export default function () {
         });
       
       console.log("Document written with ID: ", docRef.id);
-      //navigation.navigate("login");
+      navigation.navigate("login");
     }
     } catch (e) {
       console.error("Error adding document: ", e);
