@@ -253,11 +253,11 @@ const AdminOrders = () => {
           <Text style={styles2.btnContent}>Marbel Girls</Text>
         </Pressable>
       </View>
-      <View style={styles2.notificationBtn}>
-        <TouchableOpacity onPress={onNotification} style={styles.btn}>
+      <TouchableOpacity style={styles2.notificationBtn}>
+        <View onPress={onNotification} style={styles.btn}>
           <Text style={styles2.notificationcontent}>Send Notification</Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       <View style={styles2.searchItems}>
         <TextInput placeholder="Search Order" style={styles2.search} onChangeText={(val) => setSearch(val)} />
         <Pressable onPress={() => onSearchPress(search)} style={styles2.searchBtn}>
@@ -442,7 +442,6 @@ const styles2 = StyleSheet.create({
     backgroundColor: "coral",
     borderRadius: 8,
   },
-
 
   notificationcontent: {
     fontWeight: "800",
