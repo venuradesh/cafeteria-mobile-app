@@ -38,7 +38,7 @@ const AdminHome = () => {
     const q = query(collection(db, "orders"),where("status","==","Pending"));
     const user = onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        if(doc.data().mealsTime=="breakfirst" && doc.data().venue==global.canteen){
+        if(doc.data().mealsTime=="breakfast" && doc.data().venue==global.canteen){
           var t = true;
           for (let i = 0; i < breakFirstSize; i++) {
             if (breakFirstList[i].orderId == doc.data().orderId) {
