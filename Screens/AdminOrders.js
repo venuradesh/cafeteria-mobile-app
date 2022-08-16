@@ -110,8 +110,9 @@ const AdminOrders = () => {
 
   const onNotification = async () => {
     try {
+      console.log("abcd");
       let arrayList = new Array();
-      arrayList = boysHostel ? boysHostelList : marbel ? marbelList : nilaweli ? nilaweliList : newSarasavi ? newSarasaviList : sarasaviGirlsList;
+      arrayList = boysHostel ? boysHostelList : (marbel ? marbelList : (nilaweli ? nilaweliList : (newSarasavi ? newSarasaviList : sarasaviGirlsList)));
       console.log(arrayList);
       for (let i = 0; i < arrayList.length; i++) {
         const ref = doc(collection(db, "notifications"));
@@ -253,8 +254,8 @@ const AdminOrders = () => {
           <Text style={styles2.btnContent}>Marbel Girls</Text>
         </Pressable>
       </View>
-      <TouchableOpacity style={styles2.notificationBtn}>
-        <View onPress={onNotification} style={styles.btn}>
+      <TouchableOpacity style={styles2.notificationBtn} onPress={onNotification}>
+        <View style={styles.btn}>
           <Text style={styles2.notificationcontent}>Send Notification</Text>
         </View>
       </TouchableOpacity>
