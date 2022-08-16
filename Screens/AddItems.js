@@ -43,13 +43,13 @@ const AddItems = () => {
     } else {
       mealsTime = "dinner";
     }
-
+    console.log(foodType);
     if (foodType == "Fried Rice") {
       link = "https://therecipecritic.com/wp-content/uploads/2019/07/easy_fried_rice-1-500x500.jpg";
     } else if (foodType == "Rice and Curry") {
       link = "https://images.unsplash.com/photo-1617651523904-8768096faf40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmljZSUyMGFuZCUyMGN1cnJ5fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60";
     }
-    if (foodType == "Short Eats") {
+    else if (foodType == "Short Eats") {
       link = "https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fHNuYWNrc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60";
     } else {
       link = "https://images.unsplash.com/photo-1497534446932-c925b458314e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGp1aWNlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60";
