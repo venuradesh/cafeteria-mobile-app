@@ -254,7 +254,7 @@ const AdminOrders = () => {
         </Pressable>
       </View>
       <View style={styles2.notificationBtn}>
-        <TouchableOpacity onPress={onNotification}>
+        <TouchableOpacity onPress={onNotification} style={styles.btn}>
           <Text style={styles2.notificationcontent}>Send Notification</Text>
         </TouchableOpacity>
       </View>
@@ -442,6 +442,7 @@ const styles2 = StyleSheet.create({
     backgroundColor: "coral",
     borderRadius: 8,
   },
+
 
   notificationcontent: {
     fontWeight: "800",
